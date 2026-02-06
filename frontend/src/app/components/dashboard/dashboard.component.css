@@ -1,0 +1,372 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #fafafa;
+}
+
+/* Toolbar */
+.dashboard-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.toolbar-title {
+  margin-left: 12px;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.user-name {
+  margin: 0 8px;
+}
+
+/* Material Tabs */
+.dashboard-tabs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+::ng-deep .dashboard-tabs .mat-mdc-tab-body-wrapper {
+  flex: 1;
+}
+
+.tab-icon {
+  margin-right: 8px;
+}
+
+.tab-content {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Section Titles */
+.section-title {
+  font-size: 1.75rem;
+  font-weight: 400;
+  margin-bottom: 24px;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+/* Overview Tab - Stats */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  text-align: center;
+}
+
+.stat-card mat-card-content {
+  padding: 24px !important;
+}
+
+.stat-icon-container {
+  margin-bottom: 16px;
+}
+
+.stat-icon-large {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.87);
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.95rem;
+}
+
+/* Quick Actions */
+.quick-actions-card {
+  margin-top: 24px;
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.actions-grid button {
+  height: 48px;
+}
+
+/* Schedule Tab */
+.schedule-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.week-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.week-display {
+  font-weight: 600;
+  font-size: 1.1rem;
+  min-width: 150px;
+  text-align: center;
+}
+
+/* Empty State */
+.empty-state-card {
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.empty-state-card mat-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.empty-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+/* Schedule Entries */
+.schedule-list {
+  display: grid;
+  gap: 16px;
+}
+
+.schedule-entry-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.schedule-entry-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.entry-staff {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.1rem;
+}
+
+.entry-staff mat-icon {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status-normal {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-frei {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.status-krank {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.entry-details {
+  display: flex;
+  gap: 24px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.entry-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.entry-detail-item mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* Staff Tab */
+.tab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.staff-list {
+  display: grid;
+  gap: 16px;
+}
+
+.staff-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.staff-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.staff-card-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.staff-info h3 {
+  margin: 0 0 12px 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.staff-detail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.staff-detail mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.staff-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Groups Tab */
+.groups-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.group-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.group-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.group-card mat-card-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.group-card mat-card-content {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .tab-content {
+    padding: 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .schedule-header,
+  .tab-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .week-selector {
+    align-self: stretch;
+    justify-content: center;
+  }
+
+  .actions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .groups-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .toolbar-title {
+    font-size: 1rem;
+  }
+
+  .user-name {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .entry-details {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .staff-card-layout {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .staff-actions {
+    align-self: stretch;
+    justify-content: flex-end;
+  }
+}

@@ -1,0 +1,47 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <h1>🏫 Kita Casa Azul</h1>
+      <p>Dienstplan Management</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      <div class="form-group">
+        <label for="username">Benutzername</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          [(ngModel)]="username"
+          required
+          placeholder="uwe oder alexandre"
+          autofocus
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Passwort</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          [(ngModel)]="password"
+          required
+          placeholder="Passwort eingeben"
+        />
+      </div>
+
+      <div *ngIf="error" class="error-message">
+        {{ error }}
+      </div>
+
+      <button type="submit" [disabled]="loading || !loginForm.valid" class="login-button">
+        {{ loading ? 'Anmelden...' : 'Anmelden' }}
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <p class="hint">Standard-Passwort: password123</p>
+    </div>
+  </div>
+</div>

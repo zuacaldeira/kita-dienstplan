@@ -1,0 +1,45 @@
+.group-dialog {
+  min-width: 400px;
+  max-width: 600px;
+}
+
+.group-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.checkbox-container {
+  padding: 8px 0;
+}
+
+mat-dialog-content {
+  min-height: 200px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+mat-dialog-actions {
+  padding: 16px 0;
+  gap: 8px;
+}
+
+/* Form field styling */
+mat-form-field {
+  display: block;
+}
+
+mat-icon[matPrefix] {
+  margin-right: 8px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 60px;
+}

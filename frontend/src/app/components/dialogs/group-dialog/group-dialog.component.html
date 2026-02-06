@@ -1,0 +1,46 @@
+<div class="group-dialog">
+  <h2 mat-dialog-title>{{ getTitle() }}</h2>
+
+  <mat-dialog-content>
+    <form [formGroup]="groupForm" class="group-form">
+      <!-- Name -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Gruppenname</mat-label>
+        <input matInput formControlName="name" required>
+        <mat-icon matPrefix>business</mat-icon>
+        <mat-error *ngIf="hasError('name', 'required')">
+          {{ getErrorMessage('name') }}
+        </mat-error>
+        <mat-error *ngIf="hasError('name', 'minlength')">
+          {{ getErrorMessage('name') }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Description -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Beschreibung (optional)</mat-label>
+        <textarea matInput formControlName="description" rows="3"></textarea>
+        <mat-icon matPrefix>description</mat-icon>
+      </mat-form-field>
+
+      <!-- Active Checkbox -->
+      <div class="checkbox-container">
+        <mat-checkbox formControlName="isActive">
+          Aktiv
+        </mat-checkbox>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">
+      Abbrechen
+    </button>
+    <button mat-raised-button color="primary"
+            [disabled]="!groupForm.valid"
+            (click)="onSubmit()">
+      <mat-icon>save</mat-icon>
+      Speichern
+    </button>
+  </mat-dialog-actions>
+</div>

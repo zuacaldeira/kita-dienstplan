@@ -1,0 +1,254 @@
+<div class="dashboard">
+  <!-- Material Toolbar Header -->
+  <mat-toolbar color="primary" class="dashboard-toolbar">
+    <mat-icon>school</mat-icon>
+    <span class="toolbar-title">Kita Casa Azul</span>
+    <span class="spacer"></span>
+    <button mat-button [matMenuTriggerFor]="userMenu">
+      <mat-icon>account_circle</mat-icon>
+      <span class="user-name">{{ currentUser?.fullName }}</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item disabled>
+        <mat-icon>person</mat-icon>
+        <span>{{ currentUser?.username }}</span>
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Abmelden</span>
+      </button>
+    </mat-menu>
+  </mat-toolbar>
+
+  <!-- Material Tabs -->
+  <mat-tab-group class="dashboard-tabs">
+    <!-- Overview Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">dashboard</mat-icon>
+        Übersicht
+      </ng-template>
+      <div class="tab-content overview-tab">
+        <div *ngIf="loading" class="loading-container">
+          <mat-spinner></mat-spinner>
+        </div>
+
+        <div *ngIf="!loading">
+          <h2 class="section-title">Dashboard</h2>
+
+          <!-- Stats Cards -->
+          <div class="stats-grid">
+            <mat-card class="stat-card">
+              <mat-card-content>
+                <div class="stat-icon-container">
+                  <mat-icon color="primary" class="stat-icon-large">people</mat-icon>
+                </div>
+                <div class="stat-value">{{ stats.activeStaff }}</div>
+                <div class="stat-label">Aktive Mitarbeiter</div>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="stat-card">
+              <mat-card-content>
+                <div class="stat-icon-container">
+                  <mat-icon color="primary" class="stat-icon-large">business</mat-icon>
+                </div>
+                <div class="stat-value">{{ stats.groups }}</div>
+                <div class="stat-label">Altersgruppen</div>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="stat-card">
+              <mat-card-content>
+                <div class="stat-icon-container">
+                  <mat-icon color="primary" class="stat-icon-large">calendar_today</mat-icon>
+                </div>
+                <div class="stat-value">{{ stats.currentWeek }}</div>
+                <div class="stat-label">Aktuelle Woche</div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <!-- Quick Actions -->
+          <mat-card class="quick-actions-card">
+            <mat-card-header>
+              <mat-card-title>Schnellaktionen</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="actions-grid">
+                <button mat-raised-button color="primary" disabled>
+                  <mat-icon>add</mat-icon>
+                  Neuen Dienstplan erstellen
+                </button>
+                <button mat-raised-button color="primary" (click)="openStaffDialog()">
+                  <mat-icon>person_add</mat-icon>
+                  Mitarbeiter hinzufügen
+                </button>
+                <button mat-raised-button color="primary" disabled>
+                  <mat-icon>assessment</mat-icon>
+                  Wochenübersicht anzeigen
+                </button>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Schedule Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">calendar_month</mat-icon>
+        Dienstplan
+      </ng-template>
+      <div class="tab-content schedule-tab">
+        <!-- Week Navigation -->
+        <div class="schedule-header">
+          <h2 class="section-title">Dienstplan</h2>
+          <div class="week-selector">
+            <button mat-icon-button (click)="previousWeek()" aria-label="Vorherige Woche">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <span class="week-display">KW {{ currentWeek }} / {{ currentYear }}</span>
+            <button mat-icon-button (click)="nextWeek()" aria-label="Nächste Woche">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <mat-card *ngIf="scheduleEntries.length === 0" class="empty-state-card">
+          <mat-card-content>
+            <mat-icon class="empty-icon">event_busy</mat-icon>
+            <p>Kein Dienstplan für diese Woche vorhanden</p>
+            <button mat-raised-button color="primary" disabled title="Wird noch implementiert">
+              <mat-icon>add</mat-icon>
+              Dienstplan erstellen
+            </button>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Schedule Entries List -->
+        <div *ngIf="scheduleEntries.length > 0" class="schedule-list">
+          <mat-card *ngFor="let entry of scheduleEntries" class="schedule-entry-card">
+            <mat-card-content>
+              <div class="entry-header">
+                <div class="entry-staff">
+                  <mat-icon>person</mat-icon>
+                  <strong>{{ entry.staffName }}</strong>
+                </div>
+                <span [class]="'status-badge status-' + entry.status">
+                  {{ entry.status }}
+                </span>
+              </div>
+              <div class="entry-details">
+                <div class="entry-detail-item">
+                  <mat-icon>calendar_today</mat-icon>
+                  <span>{{ getDayName(entry.dayOfWeek) }}</span>
+                </div>
+                <div class="entry-detail-item">
+                  <mat-icon>schedule</mat-icon>
+                  <span>{{ entry.startTime }} - {{ entry.endTime }}</span>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Staff Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">people</mat-icon>
+        Mitarbeiter
+      </ng-template>
+      <div class="tab-content staff-tab">
+        <div class="tab-header">
+          <h2 class="section-title">Mitarbeiter</h2>
+          <button mat-raised-button color="primary" (click)="openStaffDialog()">
+            <mat-icon>person_add</mat-icon>
+            Neuer Mitarbeiter
+          </button>
+        </div>
+
+        <div class="staff-list">
+          <mat-card *ngFor="let person of staff" class="staff-card">
+            <mat-card-content>
+              <div class="staff-card-layout">
+                <div class="staff-info">
+                  <h3>{{ person.fullName }}</h3>
+                  <p class="staff-detail">
+                    <mat-icon>work</mat-icon>
+                    {{ person.role }}
+                  </p>
+                  <p class="staff-detail">
+                    <mat-icon>schedule</mat-icon>
+                    {{ person.employmentType }}
+                  </p>
+                  <p class="staff-detail" *ngIf="person.weeklyHours">
+                    <mat-icon>access_time</mat-icon>
+                    {{ person.weeklyHours }} Std./Woche
+                  </p>
+                </div>
+                <div class="staff-actions">
+                  <button mat-icon-button (click)="openStaffDialog(person)"
+                          aria-label="Mitarbeiter bearbeiten"
+                          title="Bearbeiten">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="openDeleteStaffConfirm(person)"
+                          aria-label="Mitarbeiter löschen"
+                          title="Löschen"
+                          color="warn">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Groups Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">business</mat-icon>
+        Altersgruppen
+      </ng-template>
+      <div class="tab-content groups-tab">
+        <div class="tab-header">
+          <h2 class="section-title">Altersgruppen</h2>
+          <button mat-raised-button color="primary" (click)="openGroupDialog()">
+            <mat-icon>add</mat-icon>
+            Neue Gruppe
+          </button>
+        </div>
+
+        <div class="groups-grid">
+          <mat-card *ngFor="let group of groups" class="group-card">
+            <mat-card-header>
+              <mat-card-title>{{ group.name }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>{{ group.description }}</p>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button (click)="openGroupDialog(group)">
+                <mat-icon>edit</mat-icon>
+                Bearbeiten
+              </button>
+              <button mat-button color="warn" (click)="openDeleteGroupConfirm(group)">
+                <mat-icon>delete</mat-icon>
+                Löschen
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
