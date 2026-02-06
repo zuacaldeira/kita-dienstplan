@@ -23,7 +23,7 @@
   </mat-toolbar>
 
   <!-- Material Tabs -->
-  <mat-tab-group class="dashboard-tabs">
+  <mat-tab-group class="dashboard-tabs" (selectedIndexChange)="onTabChange($event)">
     <!-- Overview Tab -->
     <mat-tab>
       <ng-template mat-tab-label>
@@ -78,7 +78,7 @@
             </mat-card-header>
             <mat-card-content>
               <div class="actions-grid">
-                <button mat-raised-button color="primary" disabled>
+                <button mat-raised-button color="primary" (click)="openScheduleEntryDialog()">
                   <mat-icon>add</mat-icon>
                   Neuen Dienstplan erstellen
                 </button>
@@ -123,7 +123,7 @@
           <mat-card-content>
             <mat-icon class="empty-icon">event_busy</mat-icon>
             <p>Kein Dienstplan für diese Woche vorhanden</p>
-            <button mat-raised-button color="primary" disabled title="Wird noch implementiert">
+            <button mat-raised-button color="primary" (click)="openScheduleEntryDialog()">
               <mat-icon>add</mat-icon>
               Dienstplan erstellen
             </button>
@@ -139,6 +139,21 @@
                   <mat-icon>person</mat-icon>
                   <strong>{{ entry.staffName }}</strong>
                 </div>
+                <div class="entry-actions">
+                  <button mat-icon-button (click)="openScheduleEntryDialog(entry)"
+                          aria-label="Dienstplan bearbeiten"
+                          title="Bearbeiten">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="openDeleteScheduleEntryConfirm(entry)"
+                          aria-label="Dienstplan löschen"
+                          title="Löschen"
+                          color="warn">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="entry-metadata">
                 <span [class]="'status-badge status-' + entry.status">
                   {{ entry.status }}
                 </span>
@@ -151,6 +166,10 @@
                 <div class="entry-detail-item">
                   <mat-icon>schedule</mat-icon>
                   <span>{{ entry.startTime }} - {{ entry.endTime }}</span>
+                </div>
+                <div class="entry-detail-item">
+                  <mat-icon>timer</mat-icon>
+                  <span>{{ entry.workingHoursFormatted }}</span>
                 </div>
               </div>
             </mat-card-content>

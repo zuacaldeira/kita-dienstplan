@@ -23,6 +23,7 @@ import { Staff, Group, ScheduleEntry, User } from '../../models/models';
 import { StaffDialogComponent, StaffDialogData } from '../dialogs/staff-dialog/staff-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { GroupDialogComponent, GroupDialogData } from '../dialogs/group-dialog/group-dialog.component';
+import { ScheduleEntryDialogComponent, ScheduleEntryDialogData } from '../dialogs/schedule-entry-dialog/schedule-entry-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -358,6 +359,89 @@ export class DashboardComponent implements OnInit, OnDestroy {
             error: (error) => {
               console.error('Error deleting group:', error);
               this.notificationService.error('Fehler beim Löschen der Gruppe');
+            }
+          });
+      }
+    });
+  }
+
+  // Schedule Entry CRUD operations
+  openScheduleEntryDialog(entry?: ScheduleEntry): void {
+    const dialogData: ScheduleEntryDialogData = {
+      mode: entry ? 'edit' : 'create',
+      entry: entry,
+      weekNumber: this.currentWeek,
+      year: this.currentYear
+    };
+
+    const dialogRef = this.dialog.open(ScheduleEntryDialogComponent, {
+      width: '600px',
+      data: dialogData
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        if (result.mode === 'error') {
+          this.notificationService.error(result.message);
+        } else if (result.mode === 'edit') {
+          // Update existing schedule entry
+          this.apiService.updateScheduleEntry(result.entryId, result.data)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: () => {
+                this.notificationService.success('Dienstplaneintrag erfolgreich aktualisiert');
+                this.loadSchedule();
+              },
+              error: (error) => {
+                console.error('Error updating schedule entry:', error);
+                this.notificationService.error('Fehler beim Aktualisieren des Dienstplaneintrags');
+              }
+            });
+        } else if (result.mode === 'create') {
+          // Create new schedule entry
+          this.apiService.createScheduleEntry(result.data)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: () => {
+                this.notificationService.success('Dienstplaneintrag erfolgreich erstellt');
+                this.loadSchedule();
+              },
+              error: (error) => {
+                console.error('Error creating schedule entry:', error);
+                this.notificationService.error('Fehler beim Erstellen des Dienstplaneintrags');
+              }
+            });
+        }
+      }
+    });
+  }
+
+  openDeleteScheduleEntryConfirm(entry: ScheduleEntry): void {
+    const dialogData: ConfirmDialogData = {
+      title: 'Dienstplaneintrag löschen',
+      message: `Möchten Sie den Dienstplaneintrag für ${entry.staffName} am ${this.getDayName(entry.dayOfWeek)} wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.`,
+      confirmText: 'Löschen',
+      cancelText: 'Abbrechen',
+      type: 'danger'
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: dialogData
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.apiService.deleteScheduleEntry(entry.id)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              this.notificationService.success('Dienstplaneintrag erfolgreich gelöscht');
+              this.loadSchedule();
+            },
+            error: (error) => {
+              console.error('Error deleting schedule entry:', error);
+              this.notificationService.error('Fehler beim Löschen des Dienstplaneintrags');
             }
           });
       }
