@@ -1,7 +1,9 @@
 package com.kita.dienstplan.security;
 
+import com.kita.dienstplan.entity.Admin;
 import com.kita.dienstplan.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,6 +31,7 @@ import java.util.List;
  * Security Configuration
  * Configures Spring Security with JWT authentication
  */
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -80,8 +83,18 @@ public class SecurityConfiguration {
      */
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> adminRepository.findByUsernameAndIsActiveTrue(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Admin not found: " + username));
+        return username -> {
+            log.debug("Loading user details for username: {}", username);
+            Admin admin = adminRepository.findByUsernameAndIsActiveTrue(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("Admin not found: " + username));
+            log.debug("Loaded admin: username={}, password hash length={}, isActive={}, isEnabled={}",
+                    admin.getUsername(),
+                    admin.getPassword() != null ? admin.getPassword().length() : 0,
+                    admin.getIsActive(),
+                    admin.isEnabled());
+            log.debug("Password hash: {}", admin.getPassword());
+            return admin;
+        };
     }
 
     /**

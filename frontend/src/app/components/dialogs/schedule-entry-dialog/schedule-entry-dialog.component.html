@@ -1,0 +1,122 @@
+<div class="schedule-entry-dialog">
+  <h2 mat-dialog-title>
+    <mat-icon class="title-icon">event_note</mat-icon>
+    {{ getTitle() }}
+  </h2>
+
+  <mat-dialog-content>
+    <form [formGroup]="scheduleForm" class="schedule-form">
+      <!-- Staff Selection -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Mitarbeiter auswählen</mat-label>
+        <mat-select formControlName="staffId" required [disabled]="isLoading || isSaving">
+          <mat-option *ngFor="let staff of staffList" [value]="staff.id">
+            {{ staff.fullName }} - {{ staff.role }}
+          </mat-option>
+        </mat-select>
+        <mat-icon matPrefix>person_outline</mat-icon>
+        <mat-error *ngIf="hasError('staffId', 'required')">
+          {{ getErrorMessage('staffId') }}
+        </mat-error>
+        <mat-hint *ngIf="isLoading">Mitarbeiter werden geladen...</mat-hint>
+      </mat-form-field>
+
+      <!-- Day of Week and Date Display (Two columns) -->
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-column">
+          <mat-label>Tag</mat-label>
+          <mat-select formControlName="dayOfWeek" required [disabled]="isSaving">
+            <mat-option *ngFor="let day of daysOfWeek" [value]="day.value">
+              {{ day.label }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>calendar_today</mat-icon>
+          <mat-error *ngIf="hasError('dayOfWeek', 'required')">
+            {{ getErrorMessage('dayOfWeek') }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-column">
+          <mat-label>Kalenderwoche</mat-label>
+          <input matInput [value]="'KW ' + data.weekNumber + ' / ' + data.year" readonly disabled>
+          <mat-icon matPrefix>date_range</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <!-- Start Time and End Time (Two columns) -->
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-column">
+          <mat-label>Startzeit</mat-label>
+          <input matInput formControlName="startTime" type="time" required [disabled]="isSaving">
+          <mat-icon matPrefix>schedule</mat-icon>
+          <mat-error *ngIf="hasError('startTime', 'required')">
+            {{ getErrorMessage('startTime') }}
+          </mat-error>
+          <mat-error *ngIf="hasError('startTime', 'pattern')">
+            {{ getErrorMessage('startTime') }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-column">
+          <mat-label>Endzeit</mat-label>
+          <input matInput formControlName="endTime" type="time" required [disabled]="isSaving">
+          <mat-icon matPrefix>schedule</mat-icon>
+          <mat-error *ngIf="hasError('endTime', 'required')">
+            {{ getErrorMessage('endTime') }}
+          </mat-error>
+          <mat-error *ngIf="hasError('endTime', 'pattern')">
+            {{ getErrorMessage('endTime') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Time Range Validation Error -->
+      <div class="time-range-error" *ngIf="hasFormError('timeRange')">
+        <mat-icon>error_outline</mat-icon>
+        <span>Die Endzeit muss nach der Startzeit liegen</span>
+      </div>
+
+      <!-- Working Hours Display (Read-only calculated field) -->
+      <mat-form-field appearance="filled" class="full-width working-hours-field">
+        <mat-label>Arbeitszeit (berechnet)</mat-label>
+        <input matInput [value]="workingHours + ' Stunden'" readonly>
+        <mat-icon matPrefix>timer</mat-icon>
+      </mat-form-field>
+
+      <!-- Status -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status" required [disabled]="isSaving">
+          <mat-option *ngFor="let status of statusOptions" [value]="status.value">
+            {{ status.label }}
+          </mat-option>
+        </mat-select>
+        <mat-icon matPrefix>info_outline</mat-icon>
+        <mat-error *ngIf="hasError('status', 'required')">
+          {{ getErrorMessage('status') }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Notes (Optional) -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Notizen (optional)</mat-label>
+        <textarea matInput formControlName="notes" rows="3" [disabled]="isSaving"></textarea>
+        <mat-icon matPrefix>note_add</mat-icon>
+        <mat-hint>Zusätzliche Informationen zum Dienstplan</mat-hint>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" [disabled]="isSaving">
+      Abbrechen
+    </button>
+    <button mat-raised-button color="primary"
+            [disabled]="!scheduleForm.valid || isSaving"
+            (click)="onSubmit()">
+      <mat-spinner *ngIf="isSaving" diameter="20" class="button-spinner"></mat-spinner>
+      <mat-icon *ngIf="!isSaving">save</mat-icon>
+      {{ isSaving ? 'Speichern...' : 'Speichern' }}
+    </button>
+  </mat-dialog-actions>
+</div>

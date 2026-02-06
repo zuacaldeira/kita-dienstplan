@@ -5,6 +5,7 @@ import com.kita.dienstplan.repository.AdminRepository;
 import com.kita.dienstplan.security.JwtService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
  * Authentication Controller
  * Handles login and token generation
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -34,14 +36,21 @@ public class AuthenticationController {
      */
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginRequest request) {
+        log.info("Login attempt for username: {}", request.getUsername());
+        log.debug("Request: username='{}', password length={}",
+                  request.getUsername(),
+                  request.getPassword() != null ? request.getPassword().length() : 0);
+
         try {
             // Authenticate user
+            log.debug("Attempting authentication...");
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getUsername(),
                             request.getPassword()
                     )
             );
+            log.info("Authentication successful for: {}", request.getUsername());
 
             // Load admin details
             Admin admin = adminRepository.findByUsername(request.getUsername())
@@ -54,6 +63,7 @@ public class AuthenticationController {
             // Generate JWT token
             String token = jwtService.generateToken(admin);
 
+            log.info("Login successful for user: {}", admin.getUsername());
             return ResponseEntity.ok(new AuthenticationResponse(
                     token,
                     admin.getUsername(),
@@ -62,6 +72,11 @@ public class AuthenticationController {
             ));
 
         } catch (Exception e) {
+            log.error("Login failed for username: {}. Error: {} - {}",
+                      request.getUsername(),
+                      e.getClass().getSimpleName(),
+                      e.getMessage());
+            log.debug("Full exception:", e);
             return ResponseEntity.badRequest()
                     .body(new AuthenticationResponse(null, null, null, "Invalid credentials"));
         }

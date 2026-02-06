@@ -212,4 +212,28 @@ export class DateUtilsService {
 
     return s1 < e2 && s2 < e1;
   }
+
+  /**
+   * Get start and end dates for a given week
+   */
+  getWeekDates(year: number, week: number): { startDate: string, endDate: string } {
+    const monday = this.getMondayOfWeek(year, week);
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+
+    return {
+      startDate: this.formatISODate(monday),
+      endDate: this.formatISODate(sunday)
+    };
+  }
+
+  /**
+   * Get date from year, week number, and day of week (1-7, Monday-Sunday)
+   */
+  getDateFromWeekAndDay(year: number, week: number, dayOfWeek: number): string {
+    const monday = this.getMondayOfWeek(year, week);
+    const targetDate = new Date(monday);
+    targetDate.setDate(monday.getDate() + (dayOfWeek - 1));
+    return this.formatISODate(targetDate);
+  }
 }
