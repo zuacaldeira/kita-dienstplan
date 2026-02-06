@@ -1,5 +1,7 @@
 package com.kita.dienstplan.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -89,6 +91,7 @@ public class Staff {
 
     // One staff member has many schedule entries
     @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("staff")
     private List<ScheduleEntry> scheduleEntries = new ArrayList<>();
 
     // Helper methods

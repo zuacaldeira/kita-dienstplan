@@ -1,5 +1,7 @@
 package com.kita.dienstplan.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -56,6 +58,7 @@ public class Group {
 
     // One group has many staff members
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("group")
     private List<Staff> staffMembers = new ArrayList<>();
 
     // Helper methods
