@@ -1,5 +1,6 @@
 package com.kita.dienstplan.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,10 +38,12 @@ public class ScheduleEntry {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "weekly_schedule_id", nullable = false)
+    @JsonIgnoreProperties("scheduleEntries")
     private WeeklySchedule weeklySchedule;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "staff_id", nullable = false)
+    @JsonIgnoreProperties({"scheduleEntries", "group"})
     private Staff staff;
 
     @Column(name = "day_of_week", nullable = false)

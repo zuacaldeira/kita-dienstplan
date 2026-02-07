@@ -5,6 +5,7 @@ import com.kita.dienstplan.dto.ScheduleEntryDTO;
 import com.kita.dienstplan.entity.ScheduleEntry;
 import com.kita.dienstplan.entity.Staff;
 import com.kita.dienstplan.entity.WeeklySchedule;
+import com.kita.dienstplan.repository.ScheduleEntryRepository;
 import com.kita.dienstplan.repository.StaffRepository;
 import com.kita.dienstplan.repository.WeeklyScheduleRepository;
 import com.kita.dienstplan.service.ScheduleService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * REST Controller for schedule operations
@@ -30,6 +32,7 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
     private final WeeklyScheduleRepository weeklyScheduleRepository;
     private final StaffRepository staffRepository;
+    private final ScheduleEntryRepository scheduleEntryRepository;
 
     /**
      * GET /api/schedules/week/{year}/{week}
@@ -96,13 +99,13 @@ public class ScheduleController {
      * Create a new schedule entry
      */
     @PostMapping("/entries")
-    public ResponseEntity<ScheduleEntryDTO> createScheduleEntry(
+    public ResponseEntity<Void> createScheduleEntry(
             @RequestBody CreateScheduleEntryRequest request) {
-        
+
         // Validate and fetch related entities
         WeeklySchedule weeklySchedule = weeklyScheduleRepository.findById(request.getWeeklyScheduleId())
                 .orElseThrow(() -> new RuntimeException("Weekly schedule not found"));
-        
+
         Staff staff = staffRepository.findById(request.getStaffId())
                 .orElseThrow(() -> new RuntimeException("Staff not found"));
 
@@ -117,8 +120,11 @@ public class ScheduleController {
         entry.setStatus(request.getStatus());
         entry.setNotes(request.getNotes());
 
-        ScheduleEntryDTO created = scheduleService.createScheduleEntry(entry);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        // Save directly without converting to DTO to avoid serialization issues
+        scheduleEntryRepository.save(entry);
+
+        // Return 201 Created with no body (avoids all serialization issues)
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /**

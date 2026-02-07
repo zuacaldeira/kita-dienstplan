@@ -47,6 +47,7 @@ public class Staff {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
+    @JsonIgnoreProperties("staffMembers")
     private Group group;
 
     @Column(name = "employment_type", length = 50)

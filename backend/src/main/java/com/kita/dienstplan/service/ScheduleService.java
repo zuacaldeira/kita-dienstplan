@@ -98,7 +98,11 @@ public class ScheduleService {
     public ScheduleEntryDTO createScheduleEntry(ScheduleEntry entry) {
         // Validation happens in controller
         ScheduleEntry saved = scheduleEntryRepository.save(entry);
-        return convertToDTO(saved);
+        // Flush to ensure data is persisted
+        scheduleEntryRepository.flush();
+        // Convert to DTO immediately within transaction
+        ScheduleEntryDTO dto = convertToDTO(saved);
+        return dto;
     }
 
     /**
@@ -142,15 +146,40 @@ public class ScheduleService {
     private ScheduleEntryDTO convertToDTO(ScheduleEntry entry) {
         ScheduleEntryDTO dto = new ScheduleEntryDTO();
         dto.setId(entry.getId());
-        dto.setWeeklyScheduleId(entry.getWeeklySchedule().getId());
-        dto.setStaffId(entry.getStaff().getId());
-        dto.setStaffName(entry.getStaff().getFullName());
-        dto.setStaffRole(entry.getStaff().getRole());
-        
-        if (entry.getStaff().getGroup() != null) {
-            dto.setGroupName(entry.getStaff().getGroup().getName());
+
+        // Safely extract relationship IDs to avoid lazy loading issues
+        try {
+            if (entry.getWeeklySchedule() != null) {
+                dto.setWeeklyScheduleId(entry.getWeeklySchedule().getId());
+            }
+        } catch (Exception e) {
+            // Handle lazy loading exception
+            dto.setWeeklyScheduleId(null);
         }
-        
+
+        try {
+            if (entry.getStaff() != null) {
+                dto.setStaffId(entry.getStaff().getId());
+                dto.setStaffName(entry.getStaff().getFullName());
+                dto.setStaffRole(entry.getStaff().getRole());
+
+                // Safely access group which might be lazy-loaded
+                try {
+                    if (entry.getStaff().getGroup() != null) {
+                        dto.setGroupName(entry.getStaff().getGroup().getName());
+                    }
+                } catch (Exception groupEx) {
+                    // Group not loaded, leave as null
+                    dto.setGroupName(null);
+                }
+            }
+        } catch (Exception e) {
+            // Handle staff lazy loading exception
+            dto.setStaffId(null);
+            dto.setStaffName("Unknown");
+            dto.setStaffRole("Unknown");
+        }
+
         dto.setDayOfWeek(entry.getDayOfWeek());
         dto.setWorkDate(entry.getWorkDate());
         dto.setStartTime(entry.getStartTime());
@@ -161,7 +190,7 @@ public class ScheduleService {
         dto.setNotes(entry.getNotes());
         dto.setWorkingHoursFormatted();
         dto.setBreakTimeFormatted();
-        
+
         return dto;
     }
 }

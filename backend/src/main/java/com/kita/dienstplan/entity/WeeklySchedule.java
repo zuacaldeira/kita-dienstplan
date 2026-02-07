@@ -1,5 +1,7 @@
 package com.kita.dienstplan.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -64,6 +66,7 @@ public class WeeklySchedule {
 
     // One weekly schedule has many schedule entries
     @OneToMany(mappedBy = "weeklySchedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<ScheduleEntry> scheduleEntries = new ArrayList<>();
 
     // Helper methods

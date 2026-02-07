@@ -144,34 +144,41 @@ class WeeklyScheduleController {
     private final WeeklyScheduleRepository weeklyScheduleRepository;
 
     @GetMapping
-    public ResponseEntity<List<WeeklySchedule>> getAllWeeklySchedules() {
-        return ResponseEntity.ok(weeklyScheduleRepository.findAllByOrderByYearDescWeekNumberDesc());
+    public ResponseEntity<List<com.kita.dienstplan.dto.WeeklyScheduleDTO>> getAllWeeklySchedules() {
+        List<WeeklySchedule> schedules = weeklyScheduleRepository.findAllByOrderByYearDescWeekNumberDesc();
+        List<com.kita.dienstplan.dto.WeeklyScheduleDTO> dtos = schedules.stream()
+                .map(com.kita.dienstplan.dto.WeeklyScheduleDTO::fromEntity)
+                .toList();
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WeeklySchedule> getWeeklyScheduleById(@PathVariable Long id) {
+    public ResponseEntity<com.kita.dienstplan.dto.WeeklyScheduleDTO> getWeeklyScheduleById(@PathVariable Long id) {
         return weeklyScheduleRepository.findById(id)
+                .map(com.kita.dienstplan.dto.WeeklyScheduleDTO::fromEntity)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/week/{year}/{weekNumber}")
-    public ResponseEntity<WeeklySchedule> getWeeklyScheduleByWeek(
+    public ResponseEntity<com.kita.dienstplan.dto.WeeklyScheduleDTO> getWeeklyScheduleByWeek(
             @PathVariable Integer year,
             @PathVariable Integer weekNumber) {
         return weeklyScheduleRepository.findByWeekNumberAndYear(weekNumber, year)
+                .map(com.kita.dienstplan.dto.WeeklyScheduleDTO::fromEntity)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<WeeklySchedule> createWeeklySchedule(@RequestBody WeeklySchedule schedule) {
+    public ResponseEntity<com.kita.dienstplan.dto.WeeklyScheduleDTO> createWeeklySchedule(@RequestBody WeeklySchedule schedule) {
         WeeklySchedule saved = weeklyScheduleRepository.save(schedule);
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+        com.kita.dienstplan.dto.WeeklyScheduleDTO dto = com.kita.dienstplan.dto.WeeklyScheduleDTO.fromEntity(saved);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<WeeklySchedule> updateWeeklySchedule(
+    public ResponseEntity<com.kita.dienstplan.dto.WeeklyScheduleDTO> updateWeeklySchedule(
             @PathVariable Long id,
             @RequestBody WeeklySchedule schedule) {
         return weeklyScheduleRepository.findById(id)
@@ -181,7 +188,9 @@ class WeeklyScheduleController {
                     existing.setStartDate(schedule.getStartDate());
                     existing.setEndDate(schedule.getEndDate());
                     existing.setNotes(schedule.getNotes());
-                    return ResponseEntity.ok(weeklyScheduleRepository.save(existing));
+                    WeeklySchedule updated = weeklyScheduleRepository.save(existing);
+                    com.kita.dienstplan.dto.WeeklyScheduleDTO dto = com.kita.dienstplan.dto.WeeklyScheduleDTO.fromEntity(updated);
+                    return ResponseEntity.ok(dto);
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
