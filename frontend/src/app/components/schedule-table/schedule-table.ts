@@ -8,6 +8,8 @@ import { ScheduleEntry } from '../../models/models';
 interface StaffWeekRow {
   staffId: number;
   staffName: string;
+  staffFirstName: string;
+  staffLastName: string;
   staffRole: string;
   monday?: ScheduleEntry;
   tuesday?: ScheduleEntry;
@@ -54,9 +56,14 @@ export class ScheduleTableComponent implements OnChanges {
     // Step 2: Transform to row objects
     const rows: StaffWeekRow[] = [];
     staffMap.forEach((staffEntries, staffId) => {
+      const fullName = staffEntries[0].staffName;
+      const nameParts = this.parseStaffName(fullName);
+
       const row: StaffWeekRow = {
         staffId: staffId,
-        staffName: staffEntries[0].staffName,
+        staffName: fullName,
+        staffFirstName: nameParts.firstName,
+        staffLastName: nameParts.lastName,
         staffRole: staffEntries[0].staffRole || '',
       };
 
@@ -81,11 +88,53 @@ export class ScheduleTableComponent implements OnChanges {
     if (!entry) return '';
 
     if (entry.status === 'NORMAL') {
-      // Show times: "08:00 - 16:00"
-      return `${entry.startTime} - ${entry.endTime}`;
+      // Show times in PDF format: "9:15 17:00" (space-separated, no leading zeros)
+      const startTime = this.formatTime(entry.startTime);
+      const endTime = this.formatTime(entry.endTime);
+      return `${startTime} ${endTime}`;
     } else {
       // Show status: "FREI", "KRANK", etc.
       return entry.status;
+    }
+  }
+
+  private formatTime(timeStr: string): string {
+    // Input: "09:15:00" or "09:15"
+    // Output: "9:15" (no leading zero on hour)
+    const parts = timeStr.substring(0, 5).split(':');
+    const hour = parseInt(parts[0], 10); // Remove leading zero
+    const minute = parts[1];
+    return `${hour}:${minute}`;
+  }
+
+  private parseStaffName(fullName: string): { firstName: string, lastName: string } {
+    // Handle various name formats:
+    // - "FirstName LastName" -> FirstName | LastName
+    // - "LastName, FirstName" -> FirstName | LastName
+    // - Single name -> empty | Name
+
+    if (fullName.includes(',')) {
+      // Format: "LastName, FirstName"
+      const parts = fullName.split(',').map(p => p.trim());
+      return {
+        lastName: parts[0] || '',
+        firstName: parts[1] || ''
+      };
+    } else {
+      // Format: "FirstName LastName" or single name
+      const parts = fullName.trim().split(/\s+/);
+      if (parts.length >= 2) {
+        return {
+          firstName: parts[0],
+          lastName: parts.slice(1).join(' ')
+        };
+      } else {
+        // Single name - use as last name for consistency with PDFs
+        return {
+          firstName: '',
+          lastName: fullName
+        };
+      }
     }
   }
 
