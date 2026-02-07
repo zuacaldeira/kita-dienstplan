@@ -1,0 +1,258 @@
+.schedule-table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 16px;
+}
+
+.schedule-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Styling */
+.schedule-table th {
+  background-color: #3f51b5;
+  color: white;
+  font-weight: 600;
+  padding: 16px 12px;
+  border-bottom: 2px solid #303f9f;
+  text-align: left;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.staff-header {
+  min-width: 180px;
+  max-width: 250px;
+}
+
+/* Cell Styling */
+.schedule-table td {
+  padding: 0;
+  border-bottom: 1px solid #e0e0e0;
+  border-right: 1px solid #f0f0f0;
+  vertical-align: top;
+  min-height: 70px;
+  position: relative;
+}
+
+.staff-cell {
+  padding: 12px;
+  background-color: #fafafa;
+  font-weight: 500;
+}
+
+.staff-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.staff-name {
+  font-weight: 500;
+  color: #212121;
+  font-size: 0.95em;
+}
+
+.staff-role {
+  font-size: 0.8em;
+  color: #757575;
+  font-weight: 400;
+}
+
+/* Schedule Cell */
+.schedule-cell {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 70px;
+  padding: 8px;
+}
+
+.schedule-cell:hover {
+  opacity: 0.9;
+  box-shadow: inset 0 0 0 2px rgba(63, 81, 181, 0.3);
+}
+
+.cell-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 54px;
+  position: relative;
+}
+
+.cell-text {
+  font-size: 0.9em;
+  line-height: 1.4;
+  color: #212121;
+  font-weight: 500;
+  padding-right: 32px;
+}
+
+.cell-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.schedule-cell:hover .cell-actions {
+  opacity: 1;
+}
+
+.delete-btn {
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+}
+
+.delete-btn mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+}
+
+.empty-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 54px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.schedule-cell:hover .empty-cell {
+  opacity: 0.3;
+}
+
+.add-icon {
+  color: #9e9e9e;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+/* Status Color Coding */
+.cell-normal {
+  background-color: #e8f5e9;
+}
+
+.cell-frei {
+  background-color: #e3f2fd;
+}
+
+.cell-krank {
+  background-color: #ffebee;
+}
+
+.cell-urlaub {
+  background-color: #fff3e0;
+}
+
+.cell-fortbildung {
+  background-color: #f3e5f5;
+}
+
+/* Row Hover Effect */
+.schedule-table tr.mat-mdc-row:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  color: #757575;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.empty-state mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  color: #bdbdbd;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 1.1em;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .schedule-table-container {
+    margin: 0 -16px;
+  }
+
+  .schedule-table th,
+  .schedule-table td {
+    padding: 8px 6px;
+    font-size: 0.85em;
+  }
+
+  .staff-header {
+    min-width: 120px;
+  }
+
+  .cell-text {
+    font-size: 0.8em;
+  }
+
+  .staff-name {
+    font-size: 0.85em;
+  }
+
+  .staff-role {
+    font-size: 0.75em;
+  }
+
+  .cell-actions {
+    opacity: 1;
+  }
+}
+
+/* Print Styling */
+@media print {
+  .schedule-table-container {
+    overflow: visible;
+  }
+
+  .schedule-table {
+    box-shadow: none;
+  }
+
+  .cell-actions {
+    display: none !important;
+  }
+
+  .schedule-cell {
+    cursor: default;
+  }
+
+  .schedule-table th {
+    background-color: #3f51b5 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .cell-normal,
+  .cell-frei,
+  .cell-krank,
+  .cell-urlaub,
+  .cell-fortbildung {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

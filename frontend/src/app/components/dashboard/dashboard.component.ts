@@ -24,6 +24,7 @@ import { StaffDialogComponent, StaffDialogData } from '../dialogs/staff-dialog/s
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { GroupDialogComponent, GroupDialogData } from '../dialogs/group-dialog/group-dialog.component';
 import { ScheduleEntryDialogComponent, ScheduleEntryDialogData } from '../dialogs/schedule-entry-dialog/schedule-entry-dialog.component';
+import { ScheduleTableComponent } from '../schedule-table/schedule-table';
 
 @Component({
   selector: 'app-dashboard',
@@ -39,7 +40,8 @@ import { ScheduleEntryDialogComponent, ScheduleEntryDialogData } from '../dialog
     MatProgressSpinnerModule,
     MatMenuModule,
     MatDividerModule,
-    MatDialogModule
+    MatDialogModule,
+    ScheduleTableComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
@@ -419,7 +421,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   openDeleteScheduleEntryConfirm(entry: ScheduleEntry): void {
     const dialogData: ConfirmDialogData = {
       title: 'Dienstplaneintrag löschen',
-      message: `Möchten Sie den Dienstplaneintrag für ${entry.staffName} am ${this.getDayName(entry.dayOfWeek)} wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.`,
+      message: `Möchten Sie den Dienstplaneintrag für ${entry.staffName} am ${this.getDayName(entry.dayOfWeek + 1)} wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.`,
       confirmText: 'Löschen',
       cancelText: 'Abbrechen',
       type: 'danger'
@@ -442,6 +444,41 @@ export class DashboardComponent implements OnInit, OnDestroy {
             error: (error) => {
               console.error('Error deleting schedule entry:', error);
               this.notificationService.error('Fehler beim Löschen des Dienstplaneintrags');
+            }
+          });
+      }
+    });
+  }
+
+  onCreateScheduleEntry(data: { staffId: number, dayOfWeek: number }): void {
+    // Open dialog in create mode with pre-selected staff and day
+    const dialogData: ScheduleEntryDialogData = {
+      mode: 'create',
+      weekNumber: this.currentWeek,
+      year: this.currentYear,
+      entry: {
+        staffId: data.staffId,
+        dayOfWeek: data.dayOfWeek
+      } as any
+    };
+
+    const dialogRef = this.dialog.open(ScheduleEntryDialogComponent, {
+      width: '600px',
+      data: dialogData
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result && result.mode === 'create') {
+        this.apiService.createScheduleEntry(result.data)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              this.notificationService.success('Dienstplaneintrag erfolgreich erstellt');
+              this.loadSchedule();
+            },
+            error: (error) => {
+              console.error('Error creating schedule entry:', error);
+              this.notificationService.error('Fehler beim Erstellen des Dienstplaneintrags');
             }
           });
       }

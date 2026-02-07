@@ -130,51 +130,16 @@
           </mat-card-content>
         </mat-card>
 
-        <!-- Schedule Entries List -->
-        <div *ngIf="scheduleEntries.length > 0" class="schedule-list">
-          <mat-card *ngFor="let entry of scheduleEntries" class="schedule-entry-card">
-            <mat-card-content>
-              <div class="entry-header">
-                <div class="entry-staff">
-                  <mat-icon>person</mat-icon>
-                  <strong>{{ entry.staffName }}</strong>
-                </div>
-                <div class="entry-actions">
-                  <button mat-icon-button (click)="openScheduleEntryDialog(entry)"
-                          aria-label="Dienstplan bearbeiten"
-                          title="Bearbeiten">
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                  <button mat-icon-button (click)="openDeleteScheduleEntryConfirm(entry)"
-                          aria-label="Dienstplan löschen"
-                          title="Löschen"
-                          color="warn">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </div>
-              </div>
-              <div class="entry-metadata">
-                <span [class]="'status-badge status-' + entry.status">
-                  {{ entry.status }}
-                </span>
-              </div>
-              <div class="entry-details">
-                <div class="entry-detail-item">
-                  <mat-icon>calendar_today</mat-icon>
-                  <span>{{ getDayName(entry.dayOfWeek) }}</span>
-                </div>
-                <div class="entry-detail-item">
-                  <mat-icon>schedule</mat-icon>
-                  <span>{{ entry.startTime }} - {{ entry.endTime }}</span>
-                </div>
-                <div class="entry-detail-item">
-                  <mat-icon>timer</mat-icon>
-                  <span>{{ entry.workingHoursFormatted }}</span>
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-card>
-        </div>
+        <!-- Schedule Table View -->
+        <app-schedule-table
+          *ngIf="scheduleEntries.length > 0"
+          [scheduleEntries]="scheduleEntries"
+          [currentWeek]="currentWeek"
+          [currentYear]="currentYear"
+          (editEntry)="openScheduleEntryDialog($event)"
+          (deleteEntry)="openDeleteScheduleEntryConfirm($event)"
+          (createEntry)="onCreateScheduleEntry($event)">
+        </app-schedule-table>
       </div>
     </mat-tab>
 

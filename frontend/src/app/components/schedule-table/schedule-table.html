@@ -1,0 +1,150 @@
+<div class="schedule-table-container">
+  <table mat-table [dataSource]="tableData" class="schedule-table">
+
+    <!-- Staff Name Column -->
+    <ng-container matColumnDef="staff">
+      <th mat-header-cell *matHeaderCellDef class="staff-header">Mitarbeiter</th>
+      <td mat-cell *matCellDef="let row" class="staff-cell">
+        <div class="staff-info">
+          <div class="staff-name">{{ row.staffName }}</div>
+          <div class="staff-role" *ngIf="row.staffRole">{{ row.staffRole }}</div>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Monday Column -->
+    <ng-container matColumnDef="monday">
+      <th mat-header-cell *matHeaderCellDef>Montag</th>
+      <td mat-cell *matCellDef="let row"
+          [ngClass]="getCellClass(row.monday)"
+          class="schedule-cell"
+          (click)="onCellClick(row, 'monday')">
+        <div class="cell-content" *ngIf="row.monday">
+          <div class="cell-text">{{ formatCellContent(row.monday) }}</div>
+          <div class="cell-actions" *ngIf="row.monday">
+            <button mat-icon-button
+                    class="delete-btn"
+                    (click)="onDeleteClick(row.monday, $event)"
+                    aria-label="Löschen"
+                    title="Eintrag löschen">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="empty-cell" *ngIf="!row.monday">
+          <mat-icon class="add-icon">add</mat-icon>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Tuesday Column -->
+    <ng-container matColumnDef="tuesday">
+      <th mat-header-cell *matHeaderCellDef>Dienstag</th>
+      <td mat-cell *matCellDef="let row"
+          [ngClass]="getCellClass(row.tuesday)"
+          class="schedule-cell"
+          (click)="onCellClick(row, 'tuesday')">
+        <div class="cell-content" *ngIf="row.tuesday">
+          <div class="cell-text">{{ formatCellContent(row.tuesday) }}</div>
+          <div class="cell-actions" *ngIf="row.tuesday">
+            <button mat-icon-button
+                    class="delete-btn"
+                    (click)="onDeleteClick(row.tuesday, $event)"
+                    aria-label="Löschen"
+                    title="Eintrag löschen">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="empty-cell" *ngIf="!row.tuesday">
+          <mat-icon class="add-icon">add</mat-icon>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Wednesday Column -->
+    <ng-container matColumnDef="wednesday">
+      <th mat-header-cell *matHeaderCellDef>Mittwoch</th>
+      <td mat-cell *matCellDef="let row"
+          [ngClass]="getCellClass(row.wednesday)"
+          class="schedule-cell"
+          (click)="onCellClick(row, 'wednesday')">
+        <div class="cell-content" *ngIf="row.wednesday">
+          <div class="cell-text">{{ formatCellContent(row.wednesday) }}</div>
+          <div class="cell-actions" *ngIf="row.wednesday">
+            <button mat-icon-button
+                    class="delete-btn"
+                    (click)="onDeleteClick(row.wednesday, $event)"
+                    aria-label="Löschen"
+                    title="Eintrag löschen">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="empty-cell" *ngIf="!row.wednesday">
+          <mat-icon class="add-icon">add</mat-icon>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Thursday Column -->
+    <ng-container matColumnDef="thursday">
+      <th mat-header-cell *matHeaderCellDef>Donnerstag</th>
+      <td mat-cell *matCellDef="let row"
+          [ngClass]="getCellClass(row.thursday)"
+          class="schedule-cell"
+          (click)="onCellClick(row, 'thursday')">
+        <div class="cell-content" *ngIf="row.thursday">
+          <div class="cell-text">{{ formatCellContent(row.thursday) }}</div>
+          <div class="cell-actions" *ngIf="row.thursday">
+            <button mat-icon-button
+                    class="delete-btn"
+                    (click)="onDeleteClick(row.thursday, $event)"
+                    aria-label="Löschen"
+                    title="Eintrag löschen">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="empty-cell" *ngIf="!row.thursday">
+          <mat-icon class="add-icon">add</mat-icon>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Friday Column -->
+    <ng-container matColumnDef="friday">
+      <th mat-header-cell *matHeaderCellDef>Freitag</th>
+      <td mat-cell *matCellDef="let row"
+          [ngClass]="getCellClass(row.friday)"
+          class="schedule-cell"
+          (click)="onCellClick(row, 'friday')">
+        <div class="cell-content" *ngIf="row.friday">
+          <div class="cell-text">{{ formatCellContent(row.friday) }}</div>
+          <div class="cell-actions" *ngIf="row.friday">
+            <button mat-icon-button
+                    class="delete-btn"
+                    (click)="onDeleteClick(row.friday, $event)"
+                    aria-label="Löschen"
+                    title="Eintrag löschen">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="empty-cell" *ngIf="!row.friday">
+          <mat-icon class="add-icon">add</mat-icon>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Table Header and Rows -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="tableData.length === 0">
+    <mat-icon>event_busy</mat-icon>
+    <p>Keine Dienstpläne für diese Woche verfügbar</p>
+  </div>
+</div>
