@@ -19,8 +19,8 @@ import java.util.List;
  * Entity representing a weekly schedule period
  */
 @Entity
-@Table(name = "weekly_schedules", 
-       uniqueConstraints = @UniqueConstraint(columnNames = {"week_number", "year"}))
+@Table(name = "weekly_schedules",
+       uniqueConstraints = @UniqueConstraint(columnNames = {"week_number", "`YEAR`"}))
 @EntityListeners(AuditingEntityListener.class)
 @Data
 @NoArgsConstructor
@@ -34,7 +34,7 @@ public class WeeklySchedule {
     @Column(name = "week_number", nullable = false)
     private Integer weekNumber;
 
-    @Column(nullable = false)
+    @Column(name = "`YEAR`", nullable = false)
     private Integer year;
 
     @Column(name = "start_date", nullable = false)
