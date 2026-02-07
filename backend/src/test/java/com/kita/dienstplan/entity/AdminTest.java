@@ -189,4 +189,149 @@ class AdminTest {
         // Assert
         assertEquals(now, admin.getLastLogin());
     }
+
+    // ==================== LOMBOK GENERATED METHOD TESTS ====================
+
+    @Test
+    void noArgsConstructor_ShouldCreateEmptyAdmin() {
+        // Act
+        Admin newAdmin = new Admin();
+
+        // Assert
+        assertNotNull(newAdmin);
+        assertNull(newAdmin.getId());
+        assertNull(newAdmin.getUsername());
+        assertNull(newAdmin.getPassword());
+    }
+
+    @Test
+    void allArgsConstructor_ShouldSetAllFields() {
+        // Arrange
+        java.time.LocalDateTime now = java.time.LocalDateTime.now();
+        java.time.LocalDateTime lastLogin = now.minusDays(1);
+
+        // Act
+        Admin newAdmin = new Admin(
+            1L, "adminuser", "password", "Admin User",
+            "admin@example.com", true, lastLogin, now, now
+        );
+
+        // Assert
+        assertEquals(1L, newAdmin.getId());
+        assertEquals("adminuser", newAdmin.getUsername());
+        assertEquals("password", newAdmin.getPassword());
+        assertEquals("Admin User", newAdmin.getFullName());
+        assertEquals("admin@example.com", newAdmin.getEmail());
+        assertTrue(newAdmin.getIsActive());
+        assertEquals(lastLogin, newAdmin.getLastLogin());
+    }
+
+    @Test
+    void setId_ShouldUpdateId() {
+        // Act
+        admin.setId(99L);
+
+        // Assert
+        assertEquals(99L, admin.getId());
+    }
+
+    @Test
+    void setUsername_ShouldUpdateUsername() {
+        // Act
+        admin.setUsername("newusername");
+
+        // Assert
+        assertEquals("newusername", admin.getUsername());
+    }
+
+    @Test
+    void setPassword_ShouldUpdatePassword() {
+        // Act
+        admin.setPassword("newHashedPassword");
+
+        // Assert
+        assertEquals("newHashedPassword", admin.getPassword());
+    }
+
+    @Test
+    void setEmail_ShouldUpdateEmail() {
+        // Act
+        admin.setEmail("newemail@example.com");
+
+        // Assert
+        assertEquals("newemail@example.com", admin.getEmail());
+    }
+
+    @Test
+    void equals_ShouldReturnTrueForSameId() {
+        // Arrange
+        Admin admin1 = new Admin();
+        admin1.setId(1L);
+        Admin admin2 = new Admin();
+        admin2.setId(1L);
+
+        // Act & Assert
+        assertEquals(admin1, admin2);
+    }
+
+    @Test
+    void equals_ShouldReturnFalseForDifferentId() {
+        // Arrange
+        Admin admin1 = new Admin();
+        admin1.setId(1L);
+        Admin admin2 = new Admin();
+        admin2.setId(2L);
+
+        // Act & Assert
+        assertNotEquals(admin1, admin2);
+    }
+
+    @Test
+    void equals_ShouldReturnTrueForSameInstance() {
+        // Act & Assert
+        assertEquals(admin, admin);
+    }
+
+    @Test
+    void equals_ShouldReturnFalseForNull() {
+        // Act & Assert
+        assertNotEquals(admin, null);
+    }
+
+    @Test
+    void hashCode_ShouldBeConsistent() {
+        // Act
+        int hash1 = admin.hashCode();
+        int hash2 = admin.hashCode();
+
+        // Assert
+        assertEquals(hash1, hash2);
+    }
+
+    @Test
+    void hashCode_ShouldBeEqualForEqualObjects() {
+        // Arrange
+        Admin admin1 = new Admin();
+        admin1.setId(1L);
+        Admin admin2 = new Admin();
+        admin2.setId(1L);
+
+        // Act & Assert
+        assertEquals(admin1.hashCode(), admin2.hashCode());
+    }
+
+    @Test
+    void toString_ShouldContainKeyFields() {
+        // Arrange
+        admin.setId(1L);
+        admin.setUsername("testuser");
+
+        // Act
+        String result = admin.toString();
+
+        // Assert
+        assertTrue(result.contains("Admin"));
+        assertTrue(result.contains("id=1"));
+        assertTrue(result.contains("testuser"));
+    }
 }

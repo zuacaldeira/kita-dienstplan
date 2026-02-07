@@ -95,4 +95,159 @@ class GroupTest {
         assertThat(group.getName()).isNotNull();
         assertThat(group.getName()).isEqualTo("Käfer");
     }
+
+    // ==================== LOMBOK GENERATED METHOD TESTS ====================
+
+    @Test
+    void noArgsConstructor_ShouldCreateEmptyGroup() {
+        // Act
+        Group newGroup = new Group();
+
+        // Assert
+        assertThat(newGroup).isNotNull();
+        assertThat(newGroup.getId()).isNull();
+        assertThat(newGroup.getName()).isNull();
+    }
+
+    @Test
+    void allArgsConstructor_ShouldSetAllFields() {
+        // Arrange
+        java.time.LocalDateTime now = java.time.LocalDateTime.now();
+
+        // Act
+        Group newGroup = new Group(
+            1L, "Marienkäfer", "Toddler group", true,
+            "admin", now, "admin", now, new java.util.ArrayList<>()
+        );
+
+        // Assert
+        assertThat(newGroup.getId()).isEqualTo(1L);
+        assertThat(newGroup.getName()).isEqualTo("Marienkäfer");
+        assertThat(newGroup.getDescription()).isEqualTo("Toddler group");
+        assertThat(newGroup.getIsActive()).isTrue();
+        assertThat(newGroup.getCreatedBy()).isEqualTo("admin");
+    }
+
+    @Test
+    void setId_ShouldUpdateId() {
+        // Act
+        group.setId(99L);
+
+        // Assert
+        assertThat(group.getId()).isEqualTo(99L);
+    }
+
+    @Test
+    void setName_ShouldUpdateName() {
+        // Act
+        group.setName("Schmetterling");
+
+        // Assert
+        assertThat(group.getName()).isEqualTo("Schmetterling");
+    }
+
+    @Test
+    void setDescription_ShouldUpdateDescription() {
+        // Act
+        group.setDescription("New description");
+
+        // Assert
+        assertThat(group.getDescription()).isEqualTo("New description");
+    }
+
+    @Test
+    void setIsActive_ShouldUpdateIsActive() {
+        // Act
+        group.setIsActive(false);
+
+        // Assert
+        assertThat(group.getIsActive()).isFalse();
+    }
+
+    @Test
+    void setStaffMembers_ShouldUpdateStaffList() {
+        // Arrange
+        java.util.List<Staff> newList = new java.util.ArrayList<>();
+        newList.add(TestDataBuilder.createTestStaff());
+
+        // Act
+        group.setStaffMembers(newList);
+
+        // Assert
+        assertThat(group.getStaffMembers()).hasSize(1);
+        assertThat(group.getStaffMembers()).isEqualTo(newList);
+    }
+
+    @Test
+    void equals_ShouldReturnTrueForSameId() {
+        // Arrange
+        Group group1 = TestDataBuilder.createTestGroup();
+        group1.setId(1L);
+        Group group2 = TestDataBuilder.createTestGroup();
+        group2.setId(1L);
+
+        // Act & Assert
+        assertThat(group1).isEqualTo(group2);
+    }
+
+    @Test
+    void equals_ShouldReturnFalseForDifferentId() {
+        // Arrange
+        Group group1 = TestDataBuilder.createTestGroup();
+        group1.setId(1L);
+        Group group2 = TestDataBuilder.createTestGroup();
+        group2.setId(2L);
+
+        // Act & Assert
+        assertThat(group1).isNotEqualTo(group2);
+    }
+
+    @Test
+    void equals_ShouldReturnTrueForSameInstance() {
+        // Act & Assert
+        assertThat(group).isEqualTo(group);
+    }
+
+    @Test
+    void equals_ShouldReturnFalseForNull() {
+        // Act & Assert
+        assertThat(group).isNotEqualTo(null);
+    }
+
+    @Test
+    void hashCode_ShouldBeConsistent() {
+        // Act
+        int hash1 = group.hashCode();
+        int hash2 = group.hashCode();
+
+        // Assert
+        assertThat(hash1).isEqualTo(hash2);
+    }
+
+    @Test
+    void hashCode_ShouldBeEqualForEqualObjects() {
+        // Arrange
+        Group group1 = TestDataBuilder.createTestGroup();
+        group1.setId(1L);
+        Group group2 = TestDataBuilder.createTestGroup();
+        group2.setId(1L);
+
+        // Act & Assert
+        assertThat(group1.hashCode()).isEqualTo(group2.hashCode());
+    }
+
+    @Test
+    void toString_ShouldContainKeyFields() {
+        // Arrange
+        group.setId(1L);
+        group.setName("Test Group");
+
+        // Act
+        String result = group.toString();
+
+        // Assert
+        assertThat(result).contains("Group");
+        assertThat(result).contains("id=1");
+        assertThat(result).contains("Test Group");
+    }
 }

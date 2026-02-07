@@ -97,4 +97,189 @@ class WeeklyScheduleTest {
         assertThat(weeklySchedule.getWeekNumber()).isNotNull();
         assertThat(weeklySchedule.getYear()).isNotNull();
     }
+
+    // ==================== LOMBOK GENERATED METHOD TESTS ====================
+
+    @Test
+    void noArgsConstructor_ShouldCreateEmptyWeeklySchedule() {
+        // Act
+        WeeklySchedule newSchedule = new WeeklySchedule();
+
+        // Assert
+        assertThat(newSchedule).isNotNull();
+        assertThat(newSchedule.getId()).isNull();
+        assertThat(newSchedule.getWeekNumber()).isNull();
+        assertThat(newSchedule.getYear()).isNull();
+    }
+
+    @Test
+    void allArgsConstructor_ShouldSetAllFields() {
+        // Arrange
+        java.time.LocalDate startDate = java.time.LocalDate.of(2024, 1, 1);
+        java.time.LocalDate endDate = java.time.LocalDate.of(2024, 1, 7);
+        java.time.LocalDateTime now = java.time.LocalDateTime.now();
+
+        // Act
+        WeeklySchedule newSchedule = new WeeklySchedule(
+            1L, 1, 2024, startDate, endDate, "Test notes",
+            "admin", now, "admin", now, new java.util.ArrayList<>()
+        );
+
+        // Assert
+        assertThat(newSchedule.getId()).isEqualTo(1L);
+        assertThat(newSchedule.getWeekNumber()).isEqualTo(1);
+        assertThat(newSchedule.getYear()).isEqualTo(2024);
+        assertThat(newSchedule.getStartDate()).isEqualTo(startDate);
+        assertThat(newSchedule.getEndDate()).isEqualTo(endDate);
+        assertThat(newSchedule.getNotes()).isEqualTo("Test notes");
+    }
+
+    @Test
+    void setId_ShouldUpdateId() {
+        // Act
+        weeklySchedule.setId(99L);
+
+        // Assert
+        assertThat(weeklySchedule.getId()).isEqualTo(99L);
+    }
+
+    @Test
+    void setWeekNumber_ShouldUpdateWeekNumber() {
+        // Act
+        weeklySchedule.setWeekNumber(52);
+
+        // Assert
+        assertThat(weeklySchedule.getWeekNumber()).isEqualTo(52);
+    }
+
+    @Test
+    void setYear_ShouldUpdateYear() {
+        // Act
+        weeklySchedule.setYear(2025);
+
+        // Assert
+        assertThat(weeklySchedule.getYear()).isEqualTo(2025);
+    }
+
+    @Test
+    void setStartDate_ShouldUpdateStartDate() {
+        // Arrange
+        java.time.LocalDate newDate = java.time.LocalDate.of(2024, 3, 1);
+
+        // Act
+        weeklySchedule.setStartDate(newDate);
+
+        // Assert
+        assertThat(weeklySchedule.getStartDate()).isEqualTo(newDate);
+    }
+
+    @Test
+    void setEndDate_ShouldUpdateEndDate() {
+        // Arrange
+        java.time.LocalDate newDate = java.time.LocalDate.of(2024, 3, 7);
+
+        // Act
+        weeklySchedule.setEndDate(newDate);
+
+        // Assert
+        assertThat(weeklySchedule.getEndDate()).isEqualTo(newDate);
+    }
+
+    @Test
+    void setNotes_ShouldUpdateNotes() {
+        // Act
+        weeklySchedule.setNotes("Updated notes");
+
+        // Assert
+        assertThat(weeklySchedule.getNotes()).isEqualTo("Updated notes");
+    }
+
+    @Test
+    void setScheduleEntries_ShouldUpdateScheduleEntries() {
+        // Arrange
+        java.util.List<ScheduleEntry> newList = new java.util.ArrayList<>();
+        newList.add(TestDataBuilder.createTestScheduleEntry(weeklySchedule, staff));
+
+        // Act
+        weeklySchedule.setScheduleEntries(newList);
+
+        // Assert
+        assertThat(weeklySchedule.getScheduleEntries()).hasSize(1);
+        assertThat(weeklySchedule.getScheduleEntries()).isEqualTo(newList);
+    }
+
+    @Test
+    void equals_ShouldReturnTrueForSameId() {
+        // Arrange
+        WeeklySchedule schedule1 = TestDataBuilder.createTestWeeklySchedule();
+        schedule1.setId(1L);
+        WeeklySchedule schedule2 = TestDataBuilder.createTestWeeklySchedule();
+        schedule2.setId(1L);
+
+        // Act & Assert
+        assertThat(schedule1).isEqualTo(schedule2);
+    }
+
+    @Test
+    void equals_ShouldReturnFalseForDifferentId() {
+        // Arrange
+        WeeklySchedule schedule1 = TestDataBuilder.createTestWeeklySchedule();
+        schedule1.setId(1L);
+        WeeklySchedule schedule2 = TestDataBuilder.createTestWeeklySchedule();
+        schedule2.setId(2L);
+
+        // Act & Assert
+        assertThat(schedule1).isNotEqualTo(schedule2);
+    }
+
+    @Test
+    void equals_ShouldReturnTrueForSameInstance() {
+        // Act & Assert
+        assertThat(weeklySchedule).isEqualTo(weeklySchedule);
+    }
+
+    @Test
+    void equals_ShouldReturnFalseForNull() {
+        // Act & Assert
+        assertThat(weeklySchedule).isNotEqualTo(null);
+    }
+
+    @Test
+    void hashCode_ShouldBeConsistent() {
+        // Act
+        int hash1 = weeklySchedule.hashCode();
+        int hash2 = weeklySchedule.hashCode();
+
+        // Assert
+        assertThat(hash1).isEqualTo(hash2);
+    }
+
+    @Test
+    void hashCode_ShouldBeEqualForEqualObjects() {
+        // Arrange
+        WeeklySchedule schedule1 = TestDataBuilder.createTestWeeklySchedule();
+        schedule1.setId(1L);
+        WeeklySchedule schedule2 = TestDataBuilder.createTestWeeklySchedule();
+        schedule2.setId(1L);
+
+        // Act & Assert
+        assertThat(schedule1.hashCode()).isEqualTo(schedule2.hashCode());
+    }
+
+    @Test
+    void toString_ShouldContainKeyFields() {
+        // Arrange
+        weeklySchedule.setId(1L);
+        weeklySchedule.setWeekNumber(10);
+        weeklySchedule.setYear(2024);
+
+        // Act
+        String result = weeklySchedule.toString();
+
+        // Assert
+        assertThat(result).contains("WeeklySchedule");
+        assertThat(result).contains("id=1");
+        assertThat(result).contains("weekNumber=10");
+        assertThat(result).contains("year=2024");
+    }
 }

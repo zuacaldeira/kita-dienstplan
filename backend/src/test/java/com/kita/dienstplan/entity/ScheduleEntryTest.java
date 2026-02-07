@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -433,5 +434,235 @@ class ScheduleEntryTest {
         assertEquals(450, firstResult);
         assertEquals(firstResult, secondResult);
         assertEquals(secondResult, thirdResult);
+    }
+
+    // ==================== LOMBOK GENERATED METHOD TESTS ====================
+
+    @Test
+    void noArgsConstructor_ShouldCreateEmptyScheduleEntry() {
+        // Act
+        ScheduleEntry newEntry = new ScheduleEntry();
+
+        // Assert
+        assertNotNull(newEntry);
+        assertNull(newEntry.getId());
+        assertNull(newEntry.getStaff());
+        assertNull(newEntry.getWeeklySchedule());
+    }
+
+    @Test
+    void allArgsConstructor_ShouldSetAllFields() {
+        // Arrange
+        LocalDate workDate = LocalDate.of(2024, 1, 15);
+        LocalTime startTime = LocalTime.of(8, 0);
+        LocalTime endTime = LocalTime.of(16, 0);
+        LocalDateTime now = java.time.LocalDateTime.now();
+
+        // Act
+        ScheduleEntry newEntry = new ScheduleEntry(
+            1L, weeklySchedule, staff, 0, workDate,
+            startTime, endTime, "normal", 450, 30, "Test notes",
+            "admin", now, "admin", now
+        );
+
+        // Assert
+        assertEquals(1L, newEntry.getId());
+        assertEquals(weeklySchedule, newEntry.getWeeklySchedule());
+        assertEquals(staff, newEntry.getStaff());
+        assertEquals(0, newEntry.getDayOfWeek());
+        assertEquals(workDate, newEntry.getWorkDate());
+        assertEquals(startTime, newEntry.getStartTime());
+        assertEquals(endTime, newEntry.getEndTime());
+        assertEquals("normal", newEntry.getStatus());
+        assertEquals(450, newEntry.getWorkingHoursMinutes());
+        assertEquals(30, newEntry.getBreakMinutes());
+        assertEquals("Test notes", newEntry.getNotes());
+    }
+
+    @Test
+    void setId_ShouldUpdateId() {
+        // Act
+        entry.setId(99L);
+
+        // Assert
+        assertEquals(99L, entry.getId());
+    }
+
+    @Test
+    void setWeeklySchedule_ShouldUpdateWeeklySchedule() {
+        // Arrange
+        WeeklySchedule newSchedule = TestDataBuilder.createTestWeeklySchedule(10, 2025);
+
+        // Act
+        entry.setWeeklySchedule(newSchedule);
+
+        // Assert
+        assertEquals(newSchedule, entry.getWeeklySchedule());
+    }
+
+    @Test
+    void setStaff_ShouldUpdateStaff() {
+        // Arrange
+        Staff newStaff = TestDataBuilder.createTestStaff("Jane", "Doe", null);
+
+        // Act
+        entry.setStaff(newStaff);
+
+        // Assert
+        assertEquals(newStaff, entry.getStaff());
+    }
+
+    @Test
+    void setDayOfWeek_ShouldUpdateDayOfWeek() {
+        // Act
+        entry.setDayOfWeek(5); // Saturday
+
+        // Assert
+        assertEquals(5, entry.getDayOfWeek());
+    }
+
+    @Test
+    void setWorkDate_ShouldUpdateWorkDate() {
+        // Arrange
+        LocalDate newDate = LocalDate.of(2025, 12, 25);
+
+        // Act
+        entry.setWorkDate(newDate);
+
+        // Assert
+        assertEquals(newDate, entry.getWorkDate());
+    }
+
+    @Test
+    void setStartTime_ShouldUpdateStartTime() {
+        // Arrange
+        LocalTime newTime = LocalTime.of(9, 30);
+
+        // Act
+        entry.setStartTime(newTime);
+
+        // Assert
+        assertEquals(newTime, entry.getStartTime());
+    }
+
+    @Test
+    void setEndTime_ShouldUpdateEndTime() {
+        // Arrange
+        LocalTime newTime = LocalTime.of(18, 0);
+
+        // Act
+        entry.setEndTime(newTime);
+
+        // Assert
+        assertEquals(newTime, entry.getEndTime());
+    }
+
+    @Test
+    void setStatus_ShouldUpdateStatus() {
+        // Act
+        entry.setStatus("krank");
+
+        // Assert
+        assertEquals("krank", entry.getStatus());
+    }
+
+    @Test
+    void setWorkingHoursMinutes_ShouldUpdateWorkingHoursMinutes() {
+        // Act
+        entry.setWorkingHoursMinutes(360);
+
+        // Assert
+        assertEquals(360, entry.getWorkingHoursMinutes());
+    }
+
+    @Test
+    void setBreakMinutes_ShouldUpdateBreakMinutes() {
+        // Act
+        entry.setBreakMinutes(45);
+
+        // Assert
+        assertEquals(45, entry.getBreakMinutes());
+    }
+
+    @Test
+    void setNotes_ShouldUpdateNotes() {
+        // Act
+        entry.setNotes("Updated notes");
+
+        // Assert
+        assertEquals("Updated notes", entry.getNotes());
+    }
+
+    @Test
+    void equals_ShouldReturnTrueForSameId() {
+        // Arrange
+        ScheduleEntry entry1 = TestDataBuilder.createTestScheduleEntry(weeklySchedule, staff);
+        entry1.setId(1L);
+        ScheduleEntry entry2 = TestDataBuilder.createTestScheduleEntry(weeklySchedule, staff);
+        entry2.setId(1L);
+
+        // Act & Assert
+        assertEquals(entry1, entry2);
+    }
+
+    @Test
+    void equals_ShouldReturnFalseForDifferentId() {
+        // Arrange
+        ScheduleEntry entry1 = TestDataBuilder.createTestScheduleEntry(weeklySchedule, staff);
+        entry1.setId(1L);
+        ScheduleEntry entry2 = TestDataBuilder.createTestScheduleEntry(weeklySchedule, staff);
+        entry2.setId(2L);
+
+        // Act & Assert
+        assertNotEquals(entry1, entry2);
+    }
+
+    @Test
+    void equals_ShouldReturnTrueForSameInstance() {
+        // Act & Assert
+        assertEquals(entry, entry);
+    }
+
+    @Test
+    void equals_ShouldReturnFalseForNull() {
+        // Act & Assert
+        assertNotEquals(entry, null);
+    }
+
+    @Test
+    void hashCode_ShouldBeConsistent() {
+        // Act
+        int hash1 = entry.hashCode();
+        int hash2 = entry.hashCode();
+
+        // Assert
+        assertEquals(hash1, hash2);
+    }
+
+    @Test
+    void hashCode_ShouldBeEqualForEqualObjects() {
+        // Arrange
+        ScheduleEntry entry1 = TestDataBuilder.createTestScheduleEntry(weeklySchedule, staff);
+        entry1.setId(1L);
+        ScheduleEntry entry2 = TestDataBuilder.createTestScheduleEntry(weeklySchedule, staff);
+        entry2.setId(1L);
+
+        // Act & Assert
+        assertEquals(entry1.hashCode(), entry2.hashCode());
+    }
+
+    @Test
+    void toString_ShouldContainKeyFields() {
+        // Arrange
+        entry.setId(1L);
+        entry.setDayOfWeek(0);
+        entry.setStatus("normal");
+
+        // Act
+        String result = entry.toString();
+
+        // Assert
+        assertTrue(result.contains("ScheduleEntry"));
+        assertTrue(result.contains("id=1"));
     }
 }
