@@ -1,11 +1,13 @@
 package com.kita.dienstplan.controller;
 
+import com.kita.dienstplan.dto.GroupDTO;
+import com.kita.dienstplan.dto.StaffDTO;
 import com.kita.dienstplan.entity.Group;
 import com.kita.dienstplan.entity.Staff;
 import com.kita.dienstplan.entity.WeeklySchedule;
-import com.kita.dienstplan.repository.GroupRepository;
-import com.kita.dienstplan.repository.StaffRepository;
 import com.kita.dienstplan.repository.WeeklyScheduleRepository;
+import com.kita.dienstplan.service.GroupService;
+import com.kita.dienstplan.service.StaffService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,60 +24,49 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class StaffController {
 
-    private final StaffRepository staffRepository;
+    private final StaffService staffService;
 
     @GetMapping
-    public ResponseEntity<List<Staff>> getAllStaff() {
-        return ResponseEntity.ok(staffRepository.findAll());
+    public ResponseEntity<List<StaffDTO>> getAllStaff() {
+        return ResponseEntity.ok(staffService.getAllStaff());
     }
 
     @GetMapping("/active")
-    public ResponseEntity<List<Staff>> getActiveStaff() {
-        return ResponseEntity.ok(staffRepository.findByIsActiveTrueOrderByFullName());
+    public ResponseEntity<List<StaffDTO>> getActiveStaff() {
+        return ResponseEntity.ok(staffService.getActiveStaff());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Staff> getStaffById(@PathVariable Long id) {
-        return staffRepository.findById(id)
+    public ResponseEntity<StaffDTO> getStaffById(@PathVariable Long id) {
+        return staffService.getStaffById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/group/{groupId}")
-    public ResponseEntity<List<Staff>> getStaffByGroup(@PathVariable Long groupId) {
-        return ResponseEntity.ok(staffRepository.findByGroupIdAndActive(groupId));
+    public ResponseEntity<List<StaffDTO>> getStaffByGroup(@PathVariable Long groupId) {
+        return ResponseEntity.ok(staffService.getStaffByGroup(groupId));
     }
 
     @PostMapping
-    public ResponseEntity<Staff> createStaff(@RequestBody Staff staff) {
-        Staff saved = staffRepository.save(staff);
+    public ResponseEntity<StaffDTO> createStaff(@RequestBody Staff staff) {
+        StaffDTO saved = staffService.createStaff(staff);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Staff> updateStaff(@PathVariable Long id, @RequestBody Staff staff) {
-        return staffRepository.findById(id)
-                .map(existing -> {
-                    // Update fields
-                    existing.setFirstName(staff.getFirstName());
-                    existing.setLastName(staff.getLastName());
-                    existing.setFullName(staff.getFullName());
-                    existing.setRole(staff.getRole());
-                    existing.setGroup(staff.getGroup());
-                    existing.setEmploymentType(staff.getEmploymentType());
-                    existing.setEmail(staff.getEmail());
-                    existing.setPhone(staff.getPhone());
-                    existing.setIsPraktikant(staff.getIsPraktikant());
-                    existing.setIsActive(staff.getIsActive());
-                    return ResponseEntity.ok(staffRepository.save(existing));
-                })
+    public ResponseEntity<StaffDTO> updateStaff(@PathVariable Long id, @RequestBody Staff staff) {
+        return staffService.updateStaff(id, staff)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStaff(@PathVariable Long id) {
-        staffRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+        if (staffService.deleteStaff(id)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
 
@@ -88,47 +79,44 @@ public class StaffController {
 @CrossOrigin(origins = "*")
 class GroupController {
 
-    private final GroupRepository groupRepository;
+    private final GroupService groupService;
 
     @GetMapping
-    public ResponseEntity<List<Group>> getAllGroups() {
-        return ResponseEntity.ok(groupRepository.findAllByOrderByName());
+    public ResponseEntity<List<GroupDTO>> getAllGroups() {
+        return ResponseEntity.ok(groupService.getAllGroups());
     }
 
     @GetMapping("/active")
-    public ResponseEntity<List<Group>> getActiveGroups() {
-        return ResponseEntity.ok(groupRepository.findByIsActiveTrueOrderByName());
+    public ResponseEntity<List<GroupDTO>> getActiveGroups() {
+        return ResponseEntity.ok(groupService.getActiveGroups());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Group> getGroupById(@PathVariable Long id) {
-        return groupRepository.findById(id)
+    public ResponseEntity<GroupDTO> getGroupById(@PathVariable Long id) {
+        return groupService.getGroupById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Group> createGroup(@RequestBody Group group) {
-        Group saved = groupRepository.save(group);
+    public ResponseEntity<GroupDTO> createGroup(@RequestBody Group group) {
+        GroupDTO saved = groupService.createGroup(group);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Group> updateGroup(@PathVariable Long id, @RequestBody Group group) {
-        return groupRepository.findById(id)
-                .map(existing -> {
-                    existing.setName(group.getName());
-                    existing.setDescription(group.getDescription());
-                    existing.setIsActive(group.getIsActive());
-                    return ResponseEntity.ok(groupRepository.save(existing));
-                })
+    public ResponseEntity<GroupDTO> updateGroup(@PathVariable Long id, @RequestBody Group group) {
+        return groupService.updateGroup(id, group)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteGroup(@PathVariable Long id) {
-        groupRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+        if (groupService.deleteGroup(id)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
 

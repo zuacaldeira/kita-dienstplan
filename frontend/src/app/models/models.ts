@@ -25,7 +25,8 @@ export interface Staff {
   lastName: string;
   fullName: string;
   role: string;
-  group?: Group;
+  groupId?: number;
+  groupName?: string;
   employmentType: string;
   weeklyHours?: number;
   email?: string;
@@ -46,6 +47,7 @@ export interface Group {
   name: string;
   description?: string;
   isActive: boolean;
+  staffCount?: number;
   createdBy?: string;
   updatedBy?: string;
   createdAt?: string;
