@@ -310,4 +310,68 @@ class ScheduleEntryDTOTest {
         assertEquals("7:30", result);
         assertNotNull(result);
     }
+
+    // Phase 3: Additional edge case tests
+
+    @Test
+    void formatMinutes_WithNegativeValue_ShouldHandleGracefully() {
+        // Negative values should be treated as-is (not a realistic scenario, but edge case coverage)
+        // Act & Assert
+        String result = ScheduleEntryDTO.formatMinutes(-30);
+
+        // Assert - Implementation divides by 60, so -30 minutes = -0 hours, -30 minutes
+        assertEquals("0:-30", result);
+    }
+
+    @Test
+    void formatMinutes_WithVeryLargeValue_ShouldFormatCorrectly() {
+        // Test with very large values (e.g., 100 hours)
+        // Act & Assert
+        assertEquals("100:00", ScheduleEntryDTO.formatMinutes(6000));
+        assertEquals("200:30", ScheduleEntryDTO.formatMinutes(12030));
+    }
+
+    @Test
+    void setWorkingHoursFormatted_CalledMultipleTimes_ShouldBeIdempotent() {
+        // Arrange
+        dto.setWorkingHoursMinutes(450);
+
+        // Act - Call multiple times
+        dto.setWorkingHoursFormatted();
+        String firstResult = dto.getWorkingHoursFormatted();
+        dto.setWorkingHoursFormatted();
+        String secondResult = dto.getWorkingHoursFormatted();
+        dto.setWorkingHoursFormatted();
+        String thirdResult = dto.getWorkingHoursFormatted();
+
+        // Assert - Should be the same every time
+        assertEquals("7:30", firstResult);
+        assertEquals(firstResult, secondResult);
+        assertEquals(secondResult, thirdResult);
+    }
+
+    @Test
+    void setBreakTimeFormatted_CalledMultipleTimes_ShouldBeIdempotent() {
+        // Arrange
+        dto.setBreakMinutes(45);
+
+        // Act - Call multiple times
+        dto.setBreakTimeFormatted();
+        String firstResult = dto.getBreakTimeFormatted();
+        dto.setBreakTimeFormatted();
+        String secondResult = dto.getBreakTimeFormatted();
+
+        // Assert - Should be the same every time
+        assertEquals("0:45", firstResult);
+        assertEquals(firstResult, secondResult);
+    }
+
+    @Test
+    void formatMinutes_WithBoundaryValues_ShouldHandleCorrectly() {
+        // Test boundary conditions around 60-minute mark
+        // Act & Assert
+        assertEquals("0:59", ScheduleEntryDTO.formatMinutes(59));
+        assertEquals("1:00", ScheduleEntryDTO.formatMinutes(60));
+        assertEquals("1:01", ScheduleEntryDTO.formatMinutes(61));
+    }
 }
