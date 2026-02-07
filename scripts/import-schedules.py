@@ -50,6 +50,7 @@ class ScheduleImporter:
             "pdfs_failed": 0,
             "weeks_created": 0,
             "entries_created": 0,
+            "entries_already_exist": 0,
             "entries_failed": 0,
             "staff_not_found": set()
         }
@@ -411,8 +412,8 @@ class ScheduleImporter:
                 self.stats["entries_created"] += 1
                 return True
             elif response.status_code == 409:
-                # 409 Conflict means entry already exists (duplicate) - this is OK
-                self.stats["entries_created"] += 1
+                # 409 Conflict means entry already exists (duplicate) - this is OK, skip it
+                self.stats["entries_already_exist"] += 1
                 return True
             else:
                 self.log(f"    ✗ Failed to create entry: HTTP {response.status_code}")
@@ -528,14 +529,22 @@ class ScheduleImporter:
                 self.import_schedule(schedule_data)
 
         # Print summary
+        total_entries_processed = (self.stats['entries_created'] +
+                                  self.stats['entries_already_exist'] +
+                                  self.stats['entries_failed'])
+
         self.log("\n" + "="*60)
         self.log("Import Complete - Summary")
         self.log("="*60)
         self.log(f"PDFs processed: {self.stats['pdfs_processed']}")
         self.log(f"PDFs failed: {self.stats['pdfs_failed']}")
         self.log(f"Weekly schedules created: {self.stats['weeks_created']}")
-        self.log(f"Schedule entries created: {self.stats['entries_created']}")
-        self.log(f"Schedule entries failed: {self.stats['entries_failed']}")
+        self.log(f"")
+        self.log(f"Schedule entries:")
+        self.log(f"  Created (new): {self.stats['entries_created']}")
+        self.log(f"  Skipped (already exist): {self.stats['entries_already_exist']}")
+        self.log(f"  Failed: {self.stats['entries_failed']}")
+        self.log(f"  Total processed: {total_entries_processed}")
 
         if self.stats["staff_not_found"]:
             self.log(f"\nStaff not found in mapping ({len(self.stats['staff_not_found'])}):")
