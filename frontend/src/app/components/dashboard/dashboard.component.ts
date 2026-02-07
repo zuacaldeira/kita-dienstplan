@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -83,7 +83,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private dateUtils: DateUtilsService,
     private notificationService: NotificationService,
     private dialog: MatDialog,
-    public themeService: ThemeService
+    public themeService: ThemeService,
+    private cdr: ChangeDetectorRef
   ) {
     // Initialize current week using DateUtilsService
     const { year, week } = this.dateUtils.getCurrentWeek();
@@ -158,6 +159,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.staff = data;
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Error loading staff:', error);
@@ -171,6 +173,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.groups = data;
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Error loading groups:', error);
