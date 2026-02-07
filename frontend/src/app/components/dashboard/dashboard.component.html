@@ -130,12 +130,8 @@
           </div>
         </div>
 
-        <!-- Loading Skeleton -->
-        <app-skeleton-schedule *ngIf="scheduleEntries.length === 0 && loading" [count]="5">
-        </app-skeleton-schedule>
-
-        <!-- Empty State -->
-        <mat-card *ngIf="scheduleEntries.length === 0 && !loading" class="empty-state-card">
+        <!-- Empty State - only show when explicitly no schedule data -->
+        <mat-card *ngIf="scheduleEntries.length === 0" class="empty-state-card">
           <mat-card-content>
             <mat-icon class="empty-icon">event_busy</mat-icon>
             <p>Kein Dienstplan für diese Woche vorhanden</p>
@@ -174,8 +170,8 @@
           </button>
         </div>
 
-        <!-- Loading Skeleton -->
-        <div *ngIf="staff.length === 0 && loading">
+        <!-- Loading Skeleton - show while staff array is empty -->
+        <div *ngIf="staff.length === 0" class="staff-loading">
           <app-skeleton-card *ngFor="let i of [1,2,3,4,5]"
                              [height]="140"
                              [showAvatar]="true"
@@ -184,7 +180,8 @@
           </app-skeleton-card>
         </div>
 
-        <div class="staff-list" *ngIf="staff.length > 0 || !loading">
+        <!-- Staff List - show when we have staff data -->
+        <div class="staff-list" *ngIf="staff.length > 0">
           <mat-card *ngFor="let person of staff" class="staff-card">
             <mat-card-content>
               <div class="staff-card-layout">
@@ -238,8 +235,8 @@
           </button>
         </div>
 
-        <!-- Loading Skeleton -->
-        <div class="groups-grid" *ngIf="groups.length === 0 && loading">
+        <!-- Loading Skeleton - show while groups array is empty -->
+        <div class="groups-grid" *ngIf="groups.length === 0">
           <app-skeleton-card *ngFor="let i of [1,2,3,4]"
                              [height]="180"
                              [showAvatar]="false"
@@ -248,7 +245,8 @@
           </app-skeleton-card>
         </div>
 
-        <div class="groups-grid" *ngIf="groups.length > 0 || !loading">
+        <!-- Groups Grid - show when we have groups data -->
+        <div class="groups-grid" *ngIf="groups.length > 0">
           <mat-card *ngFor="let group of groups" class="group-card">
             <mat-card-header>
               <mat-card-title>{{ group.name }}</mat-card-title>
