@@ -19,12 +19,16 @@ import { AuthService } from '../../services/auth.service';
 import { ApiService } from '../../services/api.service';
 import { DateUtilsService } from '../../services/date-utils.service';
 import { NotificationService } from '../../services/notification.service';
+import { ThemeService } from '../../services/theme.service';
 import { Staff, Group, ScheduleEntry, User } from '../../models/models';
 import { StaffDialogComponent, StaffDialogData } from '../dialogs/staff-dialog/staff-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { GroupDialogComponent, GroupDialogData } from '../dialogs/group-dialog/group-dialog.component';
 import { ScheduleEntryDialogComponent, ScheduleEntryDialogData } from '../dialogs/schedule-entry-dialog/schedule-entry-dialog.component';
 import { ScheduleTableComponent } from '../schedule-table/schedule-table';
+import { SkeletonStatsComponent } from '../skeleton-loaders/skeleton-stats.component';
+import { SkeletonScheduleComponent } from '../skeleton-loaders/skeleton-schedule.component';
+import { SkeletonCardComponent } from '../skeleton-loaders/skeleton-card.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -41,7 +45,10 @@ import { ScheduleTableComponent } from '../schedule-table/schedule-table';
     MatMenuModule,
     MatDividerModule,
     MatDialogModule,
-    ScheduleTableComponent
+    ScheduleTableComponent,
+    SkeletonStatsComponent,
+    SkeletonScheduleComponent,
+    SkeletonCardComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
@@ -75,7 +82,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private router: Router,
     private dateUtils: DateUtilsService,
     private notificationService: NotificationService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    public themeService: ThemeService
   ) {
     // Initialize current week using DateUtilsService
     const { year, week } = this.dateUtils.getCurrentWeek();
@@ -483,6 +491,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
           });
       }
     });
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
   }
 
   logout(): void {

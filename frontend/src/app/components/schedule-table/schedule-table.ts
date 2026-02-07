@@ -182,4 +182,81 @@ export class ScheduleTableComponent implements OnChanges {
     };
     return dayNames[day] ?? '';
   }
+
+  /**
+   * Get initials from staff name for avatar
+   */
+  getInitials(firstName: string, lastName: string): string {
+    const first = firstName ? firstName.charAt(0).toUpperCase() : '';
+    const last = lastName ? lastName.charAt(0).toUpperCase() : '';
+
+    if (first && last) {
+      return first + last;
+    } else if (last) {
+      return last.substring(0, 2).toUpperCase();
+    } else if (first) {
+      return first.substring(0, 2).toUpperCase();
+    }
+    return '??';
+  }
+
+  /**
+   * Get CSS class for day pill based on status
+   */
+  getDayPillClass(entry: ScheduleEntry | undefined): string {
+    if (!entry) {
+      return 'pill-empty-state';
+    }
+    return `pill-${entry.status.toLowerCase()}`;
+  }
+
+  /**
+   * Get icon for status
+   */
+  getStatusIcon(status: string): string {
+    const iconMap: { [key: string]: string } = {
+      'NORMAL': 'schedule',
+      'FREI': 'beach_access',
+      'KRANK': 'local_hospital',
+      'URLAUB': 'flight_takeoff',
+      'FORTBILDUNG': 'school'
+    };
+    return iconMap[status] || 'event';
+  }
+
+  /**
+   * Calculate work hours from start and end time
+   */
+  getWorkHours(entry: ScheduleEntry): string {
+    if (entry.status !== 'NORMAL' || !entry.startTime || !entry.endTime) {
+      return '';
+    }
+
+    try {
+      const start = this.parseTimeToMinutes(entry.startTime);
+      const end = this.parseTimeToMinutes(entry.endTime);
+      const diffMinutes = end - start;
+
+      if (diffMinutes <= 0) return '';
+
+      const hours = Math.floor(diffMinutes / 60);
+      const minutes = diffMinutes % 60;
+
+      if (minutes === 0) {
+        return `${hours}h`;
+      } else {
+        return `${hours}h ${minutes}min`;
+      }
+    } catch (e) {
+      return '';
+    }
+  }
+
+  private parseTimeToMinutes(timeStr: string): number {
+    // Input: "09:15:00" or "09:15"
+    const parts = timeStr.split(':');
+    const hours = parseInt(parts[0], 10);
+    const minutes = parseInt(parts[1], 10);
+    return hours * 60 + minutes;
+  }
 }

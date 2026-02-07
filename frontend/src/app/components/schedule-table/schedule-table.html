@@ -1,151 +1,186 @@
-<div class="schedule-table-container">
-  <table mat-table [dataSource]="tableData" class="schedule-table">
+<div class="schedule-cards-container" role="region" aria-label="Wochenzeitplan">
+  <!-- Staff Cards - One per staff member -->
+  <article class="staff-schedule-card"
+           *ngFor="let row of tableData"
+           [attr.aria-label]="'Zeitplan für ' + row.staffName">
+    <!-- Staff Header with Avatar -->
+    <div class="staff-header">
+      <div class="staff-avatar" role="img" [attr.aria-label]="'Avatar für ' + row.staffName">
+        {{ getInitials(row.staffFirstName, row.staffLastName) }}
+      </div>
+      <div class="staff-details">
+        <h3 class="staff-name">{{ row.staffName }}</h3>
+        <div class="staff-role" *ngIf="row.staffRole">{{ row.staffRole }}</div>
+      </div>
+    </div>
 
-    <!-- Staff Name Column -->
-    <ng-container matColumnDef="staff">
-      <th mat-header-cell *matHeaderCellDef class="staff-header">Mitarbeiter</th>
-      <td mat-cell *matCellDef="let row" class="staff-cell">
-        <div class="staff-info">
-          <div class="staff-last-name">{{ row.staffLastName }}</div>
-          <div class="staff-first-name" *ngIf="row.staffFirstName">{{ row.staffFirstName }}</div>
-          <div class="staff-role" *ngIf="row.staffRole">{{ row.staffRole }}</div>
-        </div>
-      </td>
-    </ng-container>
-
-    <!-- Monday Column -->
-    <ng-container matColumnDef="monday">
-      <th mat-header-cell *matHeaderCellDef>Montag</th>
-      <td mat-cell *matCellDef="let row"
-          [ngClass]="getCellClass(row.monday)"
-          class="schedule-cell"
-          (click)="onCellClick(row, 'monday')">
-        <div class="cell-content" *ngIf="row.monday">
-          <div class="cell-text">{{ formatCellContent(row.monday) }}</div>
-          <div class="cell-actions" *ngIf="row.monday">
+    <!-- Week Schedule Pills -->
+    <div class="week-schedule" role="list" aria-label="Wochentage">
+      <!-- Monday -->
+      <div class="day-pill-container" role="listitem">
+        <div class="day-label" id="mon-label-{{row.staffId}}">MON</div>
+        <button class="day-pill"
+                type="button"
+                [ngClass]="getDayPillClass(row.monday)"
+                (click)="onCellClick(row, 'monday')"
+                [attr.aria-label]="row.monday ? ('Montag: ' + formatCellContent(row.monday) + '. Klicken zum Bearbeiten') : 'Montag: Kein Eintrag. Klicken zum Hinzufügen'"
+                [attr.aria-describedby]="'mon-label-' + row.staffId">
+          <div *ngIf="row.monday" class="pill-content">
+            <mat-icon class="status-icon" aria-hidden="true">{{ getStatusIcon(row.monday.status) }}</mat-icon>
+            <div class="pill-text">
+              <div class="pill-time">{{ formatCellContent(row.monday) }}</div>
+              <div class="pill-hours" *ngIf="row.monday.status === 'NORMAL' && getWorkHours(row.monday)">
+                {{ getWorkHours(row.monday) }}
+              </div>
+            </div>
             <button mat-icon-button
-                    class="delete-btn"
+                    type="button"
+                    class="pill-delete-btn"
                     (click)="onDeleteClick(row.monday, $event)"
-                    aria-label="Löschen"
-                    title="Eintrag löschen">
-              <mat-icon>close</mat-icon>
+                    aria-label="Montag Eintrag löschen">
+              <mat-icon aria-hidden="true">close</mat-icon>
             </button>
           </div>
-        </div>
-        <div class="empty-cell" *ngIf="!row.monday">
-          <mat-icon class="add-icon">add</mat-icon>
-        </div>
-      </td>
-    </ng-container>
+          <div *ngIf="!row.monday" class="pill-empty" aria-hidden="true">
+            <mat-icon class="pulse-icon">add_circle_outline</mat-icon>
+            <span>Hinzufügen</span>
+          </div>
+        </button>
+      </div>
 
-    <!-- Tuesday Column -->
-    <ng-container matColumnDef="tuesday">
-      <th mat-header-cell *matHeaderCellDef>Dienstag</th>
-      <td mat-cell *matCellDef="let row"
-          [ngClass]="getCellClass(row.tuesday)"
-          class="schedule-cell"
-          (click)="onCellClick(row, 'tuesday')">
-        <div class="cell-content" *ngIf="row.tuesday">
-          <div class="cell-text">{{ formatCellContent(row.tuesday) }}</div>
-          <div class="cell-actions" *ngIf="row.tuesday">
+      <!-- Tuesday -->
+      <div class="day-pill-container" role="listitem">
+        <div class="day-label" id="tue-label-{{row.staffId}}">DIE</div>
+        <button class="day-pill"
+                type="button"
+                [ngClass]="getDayPillClass(row.tuesday)"
+                (click)="onCellClick(row, 'tuesday')"
+                [attr.aria-label]="row.tuesday ? ('Dienstag: ' + formatCellContent(row.tuesday) + '. Klicken zum Bearbeiten') : 'Dienstag: Kein Eintrag. Klicken zum Hinzufügen'"
+                [attr.aria-describedby]="'tue-label-' + row.staffId">
+          <div *ngIf="row.tuesday" class="pill-content">
+            <mat-icon class="status-icon" aria-hidden="true">{{ getStatusIcon(row.tuesday.status) }}</mat-icon>
+            <div class="pill-text">
+              <div class="pill-time">{{ formatCellContent(row.tuesday) }}</div>
+              <div class="pill-hours" *ngIf="row.tuesday.status === 'NORMAL' && getWorkHours(row.tuesday)">
+                {{ getWorkHours(row.tuesday) }}
+              </div>
+            </div>
             <button mat-icon-button
-                    class="delete-btn"
+                    type="button"
+                    class="pill-delete-btn"
                     (click)="onDeleteClick(row.tuesday, $event)"
-                    aria-label="Löschen"
-                    title="Eintrag löschen">
-              <mat-icon>close</mat-icon>
+                    aria-label="Dienstag Eintrag löschen">
+              <mat-icon aria-hidden="true">close</mat-icon>
             </button>
           </div>
-        </div>
-        <div class="empty-cell" *ngIf="!row.tuesday">
-          <mat-icon class="add-icon">add</mat-icon>
-        </div>
-      </td>
-    </ng-container>
+          <div *ngIf="!row.tuesday" class="pill-empty" aria-hidden="true">
+            <mat-icon class="pulse-icon">add_circle_outline</mat-icon>
+            <span>Hinzufügen</span>
+          </div>
+        </button>
+      </div>
 
-    <!-- Wednesday Column -->
-    <ng-container matColumnDef="wednesday">
-      <th mat-header-cell *matHeaderCellDef>Mittwoch</th>
-      <td mat-cell *matCellDef="let row"
-          [ngClass]="getCellClass(row.wednesday)"
-          class="schedule-cell"
-          (click)="onCellClick(row, 'wednesday')">
-        <div class="cell-content" *ngIf="row.wednesday">
-          <div class="cell-text">{{ formatCellContent(row.wednesday) }}</div>
-          <div class="cell-actions" *ngIf="row.wednesday">
+      <!-- Wednesday -->
+      <div class="day-pill-container" role="listitem">
+        <div class="day-label" id="wed-label-{{row.staffId}}">MIT</div>
+        <button class="day-pill"
+                type="button"
+                [ngClass]="getDayPillClass(row.wednesday)"
+                (click)="onCellClick(row, 'wednesday')"
+                [attr.aria-label]="row.wednesday ? ('Mittwoch: ' + formatCellContent(row.wednesday) + '. Klicken zum Bearbeiten') : 'Mittwoch: Kein Eintrag. Klicken zum Hinzufügen'"
+                [attr.aria-describedby]="'wed-label-' + row.staffId">
+          <div *ngIf="row.wednesday" class="pill-content">
+            <mat-icon class="status-icon" aria-hidden="true">{{ getStatusIcon(row.wednesday.status) }}</mat-icon>
+            <div class="pill-text">
+              <div class="pill-time">{{ formatCellContent(row.wednesday) }}</div>
+              <div class="pill-hours" *ngIf="row.wednesday.status === 'NORMAL' && getWorkHours(row.wednesday)">
+                {{ getWorkHours(row.wednesday) }}
+              </div>
+            </div>
             <button mat-icon-button
-                    class="delete-btn"
+                    type="button"
+                    class="pill-delete-btn"
                     (click)="onDeleteClick(row.wednesday, $event)"
-                    aria-label="Löschen"
-                    title="Eintrag löschen">
-              <mat-icon>close</mat-icon>
+                    aria-label="Mittwoch Eintrag löschen">
+              <mat-icon aria-hidden="true">close</mat-icon>
             </button>
           </div>
-        </div>
-        <div class="empty-cell" *ngIf="!row.wednesday">
-          <mat-icon class="add-icon">add</mat-icon>
-        </div>
-      </td>
-    </ng-container>
+          <div *ngIf="!row.wednesday" class="pill-empty" aria-hidden="true">
+            <mat-icon class="pulse-icon">add_circle_outline</mat-icon>
+            <span>Hinzufügen</span>
+          </div>
+        </button>
+      </div>
 
-    <!-- Thursday Column -->
-    <ng-container matColumnDef="thursday">
-      <th mat-header-cell *matHeaderCellDef>Donnerstag</th>
-      <td mat-cell *matCellDef="let row"
-          [ngClass]="getCellClass(row.thursday)"
-          class="schedule-cell"
-          (click)="onCellClick(row, 'thursday')">
-        <div class="cell-content" *ngIf="row.thursday">
-          <div class="cell-text">{{ formatCellContent(row.thursday) }}</div>
-          <div class="cell-actions" *ngIf="row.thursday">
+      <!-- Thursday -->
+      <div class="day-pill-container" role="listitem">
+        <div class="day-label" id="thu-label-{{row.staffId}}">DON</div>
+        <button class="day-pill"
+                type="button"
+                [ngClass]="getDayPillClass(row.thursday)"
+                (click)="onCellClick(row, 'thursday')"
+                [attr.aria-label]="row.thursday ? ('Donnerstag: ' + formatCellContent(row.thursday) + '. Klicken zum Bearbeiten') : 'Donnerstag: Kein Eintrag. Klicken zum Hinzufügen'"
+                [attr.aria-describedby]="'thu-label-' + row.staffId">
+          <div *ngIf="row.thursday" class="pill-content">
+            <mat-icon class="status-icon" aria-hidden="true">{{ getStatusIcon(row.thursday.status) }}</mat-icon>
+            <div class="pill-text">
+              <div class="pill-time">{{ formatCellContent(row.thursday) }}</div>
+              <div class="pill-hours" *ngIf="row.thursday.status === 'NORMAL' && getWorkHours(row.thursday)">
+                {{ getWorkHours(row.thursday) }}
+              </div>
+            </div>
             <button mat-icon-button
-                    class="delete-btn"
+                    type="button"
+                    class="pill-delete-btn"
                     (click)="onDeleteClick(row.thursday, $event)"
-                    aria-label="Löschen"
-                    title="Eintrag löschen">
-              <mat-icon>close</mat-icon>
+                    aria-label="Donnerstag Eintrag löschen">
+              <mat-icon aria-hidden="true">close</mat-icon>
             </button>
           </div>
-        </div>
-        <div class="empty-cell" *ngIf="!row.thursday">
-          <mat-icon class="add-icon">add</mat-icon>
-        </div>
-      </td>
-    </ng-container>
+          <div *ngIf="!row.thursday" class="pill-empty" aria-hidden="true">
+            <mat-icon class="pulse-icon">add_circle_outline</mat-icon>
+            <span>Hinzufügen</span>
+          </div>
+        </button>
+      </div>
 
-    <!-- Friday Column -->
-    <ng-container matColumnDef="friday">
-      <th mat-header-cell *matHeaderCellDef>Freitag</th>
-      <td mat-cell *matCellDef="let row"
-          [ngClass]="getCellClass(row.friday)"
-          class="schedule-cell"
-          (click)="onCellClick(row, 'friday')">
-        <div class="cell-content" *ngIf="row.friday">
-          <div class="cell-text">{{ formatCellContent(row.friday) }}</div>
-          <div class="cell-actions" *ngIf="row.friday">
+      <!-- Friday -->
+      <div class="day-pill-container" role="listitem">
+        <div class="day-label" id="fri-label-{{row.staffId}}">FRE</div>
+        <button class="day-pill"
+                type="button"
+                [ngClass]="getDayPillClass(row.friday)"
+                (click)="onCellClick(row, 'friday')"
+                [attr.aria-label]="row.friday ? ('Freitag: ' + formatCellContent(row.friday) + '. Klicken zum Bearbeiten') : 'Freitag: Kein Eintrag. Klicken zum Hinzufügen'"
+                [attr.aria-describedby]="'fri-label-' + row.staffId">
+          <div *ngIf="row.friday" class="pill-content">
+            <mat-icon class="status-icon" aria-hidden="true">{{ getStatusIcon(row.friday.status) }}</mat-icon>
+            <div class="pill-text">
+              <div class="pill-time">{{ formatCellContent(row.friday) }}</div>
+              <div class="pill-hours" *ngIf="row.friday.status === 'NORMAL' && getWorkHours(row.friday)">
+                {{ getWorkHours(row.friday) }}
+              </div>
+            </div>
             <button mat-icon-button
-                    class="delete-btn"
+                    type="button"
+                    class="pill-delete-btn"
                     (click)="onDeleteClick(row.friday, $event)"
-                    aria-label="Löschen"
-                    title="Eintrag löschen">
-              <mat-icon>close</mat-icon>
+                    aria-label="Freitag Eintrag löschen">
+              <mat-icon aria-hidden="true">close</mat-icon>
             </button>
           </div>
-        </div>
-        <div class="empty-cell" *ngIf="!row.friday">
-          <mat-icon class="add-icon">add</mat-icon>
-        </div>
-      </td>
-    </ng-container>
-
-    <!-- Table Header and Rows -->
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
+          <div *ngIf="!row.friday" class="pill-empty" aria-hidden="true">
+            <mat-icon class="pulse-icon">add_circle_outline</mat-icon>
+            <span>Hinzufügen</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </article>
 
   <!-- Empty State -->
-  <div class="empty-state" *ngIf="tableData.length === 0">
-    <mat-icon>event_busy</mat-icon>
+  <div class="empty-state" *ngIf="tableData.length === 0" role="status" aria-live="polite">
+    <mat-icon aria-hidden="true">event_busy</mat-icon>
     <p>Keine Dienstpläne für diese Woche verfügbar</p>
   </div>
 </div>

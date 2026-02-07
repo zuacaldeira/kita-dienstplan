@@ -1,13 +1,23 @@
 <div class="dashboard">
   <!-- Material Toolbar Header -->
-  <mat-toolbar color="primary" class="dashboard-toolbar">
-    <mat-icon>school</mat-icon>
+  <mat-toolbar color="primary" class="dashboard-toolbar" role="banner">
+    <mat-icon aria-hidden="true">school</mat-icon>
     <span class="toolbar-title">Kita Casa Azul</span>
     <span class="spacer"></span>
-    <button mat-button [matMenuTriggerFor]="userMenu">
-      <mat-icon>account_circle</mat-icon>
+    <button mat-icon-button
+            (click)="toggleTheme()"
+            [attr.aria-label]="themeService.isDarkMode() ? 'Zum hellen Modus wechseln' : 'Zum dunklen Modus wechseln'"
+            [attr.aria-pressed]="themeService.isDarkMode()"
+            title="{{ themeService.isDarkMode() ? 'Heller Modus' : 'Dunkler Modus' }}">
+      <mat-icon>{{ themeService.isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    </button>
+    <button mat-button
+            [matMenuTriggerFor]="userMenu"
+            aria-label="Benutzermenü öffnen"
+            aria-haspopup="true">
+      <mat-icon aria-hidden="true">account_circle</mat-icon>
       <span class="user-name">{{ currentUser?.fullName }}</span>
-      <mat-icon>arrow_drop_down</mat-icon>
+      <mat-icon aria-hidden="true">arrow_drop_down</mat-icon>
     </button>
     <mat-menu #userMenu="matMenu">
       <button mat-menu-item disabled>
@@ -23,22 +33,24 @@
   </mat-toolbar>
 
   <!-- Material Tabs -->
-  <mat-tab-group class="dashboard-tabs" (selectedIndexChange)="onTabChange($event)">
+  <mat-tab-group class="dashboard-tabs"
+                 (selectedIndexChange)="onTabChange($event)"
+                 role="navigation"
+                 aria-label="Hauptnavigation">
     <!-- Overview Tab -->
-    <mat-tab>
+    <mat-tab label="Übersicht" aria-label="Übersicht Seite">
       <ng-template mat-tab-label>
-        <mat-icon class="tab-icon">dashboard</mat-icon>
+        <mat-icon class="tab-icon" aria-hidden="true">dashboard</mat-icon>
         Übersicht
       </ng-template>
       <div class="tab-content overview-tab">
-        <div *ngIf="loading" class="loading-container">
-          <mat-spinner></mat-spinner>
-        </div>
+        <h2 class="section-title">Dashboard</h2>
 
+        <!-- Loading Skeleton -->
+        <app-skeleton-stats *ngIf="loading"></app-skeleton-stats>
+
+        <!-- Stats Cards -->
         <div *ngIf="!loading">
-          <h2 class="section-title">Dashboard</h2>
-
-          <!-- Stats Cards -->
           <div class="stats-grid">
             <mat-card class="stat-card">
               <mat-card-content>
@@ -71,36 +83,36 @@
             </mat-card>
           </div>
 
-          <!-- Quick Actions -->
-          <mat-card class="quick-actions-card">
-            <mat-card-header>
-              <mat-card-title>Schnellaktionen</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-              <div class="actions-grid">
-                <button mat-raised-button color="primary" (click)="openScheduleEntryDialog()">
-                  <mat-icon>add</mat-icon>
-                  Neuen Dienstplan erstellen
-                </button>
-                <button mat-raised-button color="primary" (click)="openStaffDialog()">
-                  <mat-icon>person_add</mat-icon>
-                  Mitarbeiter hinzufügen
-                </button>
-                <button mat-raised-button color="primary" disabled>
-                  <mat-icon>assessment</mat-icon>
-                  Wochenübersicht anzeigen
-                </button>
-              </div>
-            </mat-card-content>
-          </mat-card>
-        </div>
+            <!-- Quick Actions -->
+            <mat-card class="quick-actions-card">
+              <mat-card-header>
+                <mat-card-title>Schnellaktionen</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="actions-grid">
+                  <button mat-raised-button color="primary" (click)="openScheduleEntryDialog()">
+                    <mat-icon>add</mat-icon>
+                    Neuen Dienstplan erstellen
+                  </button>
+                  <button mat-raised-button color="primary" (click)="openStaffDialog()">
+                    <mat-icon>person_add</mat-icon>
+                    Mitarbeiter hinzufügen
+                  </button>
+                  <button mat-raised-button color="primary" disabled>
+                    <mat-icon>assessment</mat-icon>
+                    Wochenübersicht anzeigen
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
       </div>
     </mat-tab>
 
     <!-- Schedule Tab -->
-    <mat-tab>
+    <mat-tab label="Dienstplan" aria-label="Dienstplan Seite">
       <ng-template mat-tab-label>
-        <mat-icon class="tab-icon">calendar_month</mat-icon>
+        <mat-icon class="tab-icon" aria-hidden="true">calendar_month</mat-icon>
         Dienstplan
       </ng-template>
       <div class="tab-content schedule-tab">
@@ -118,8 +130,12 @@
           </div>
         </div>
 
+        <!-- Loading Skeleton -->
+        <app-skeleton-schedule *ngIf="scheduleEntries.length === 0 && loading" [count]="5">
+        </app-skeleton-schedule>
+
         <!-- Empty State -->
-        <mat-card *ngIf="scheduleEntries.length === 0" class="empty-state-card">
+        <mat-card *ngIf="scheduleEntries.length === 0 && !loading" class="empty-state-card">
           <mat-card-content>
             <mat-icon class="empty-icon">event_busy</mat-icon>
             <p>Kein Dienstplan für diese Woche vorhanden</p>
@@ -144,9 +160,9 @@
     </mat-tab>
 
     <!-- Staff Tab -->
-    <mat-tab>
+    <mat-tab label="Mitarbeiter" aria-label="Mitarbeiter Seite">
       <ng-template mat-tab-label>
-        <mat-icon class="tab-icon">people</mat-icon>
+        <mat-icon class="tab-icon" aria-hidden="true">people</mat-icon>
         Mitarbeiter
       </ng-template>
       <div class="tab-content staff-tab">
@@ -158,7 +174,17 @@
           </button>
         </div>
 
-        <div class="staff-list">
+        <!-- Loading Skeleton -->
+        <div *ngIf="staff.length === 0 && loading">
+          <app-skeleton-card *ngFor="let i of [1,2,3,4,5]"
+                             [height]="140"
+                             [showAvatar]="true"
+                             [showContent]="true"
+                             [contentLinesCount]="3">
+          </app-skeleton-card>
+        </div>
+
+        <div class="staff-list" *ngIf="staff.length > 0 || !loading">
           <mat-card *ngFor="let person of staff" class="staff-card">
             <mat-card-content>
               <div class="staff-card-layout">
@@ -198,9 +224,9 @@
     </mat-tab>
 
     <!-- Groups Tab -->
-    <mat-tab>
+    <mat-tab label="Altersgruppen" aria-label="Altersgruppen Seite">
       <ng-template mat-tab-label>
-        <mat-icon class="tab-icon">business</mat-icon>
+        <mat-icon class="tab-icon" aria-hidden="true">business</mat-icon>
         Altersgruppen
       </ng-template>
       <div class="tab-content groups-tab">
@@ -212,7 +238,17 @@
           </button>
         </div>
 
-        <div class="groups-grid">
+        <!-- Loading Skeleton -->
+        <div class="groups-grid" *ngIf="groups.length === 0 && loading">
+          <app-skeleton-card *ngFor="let i of [1,2,3,4]"
+                             [height]="180"
+                             [showAvatar]="false"
+                             [showContent]="true"
+                             [contentLinesCount]="4">
+          </app-skeleton-card>
+        </div>
+
+        <div class="groups-grid" *ngIf="groups.length > 0 || !loading">
           <mat-card *ngFor="let group of groups" class="group-card">
             <mat-card-header>
               <mat-card-title>{{ group.name }}</mat-card-title>

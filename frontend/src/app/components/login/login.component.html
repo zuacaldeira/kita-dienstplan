@@ -1,14 +1,20 @@
 <div class="login-container">
   <div class="login-card">
     <div class="login-header">
-      <h1>🏫 Kita Casa Azul</h1>
+      <div class="logo-container">
+        <mat-icon class="logo-icon">school</mat-icon>
+      </div>
+      <h1>Kita Casa Azul</h1>
       <p>Dienstplan Management</p>
     </div>
 
     <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
-      <div class="form-group">
-        <label for="username">Benutzername</label>
+      <!-- Username Field -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Benutzername</mat-label>
+        <mat-icon matIconPrefix>person</mat-icon>
         <input
+          matInput
           type="text"
           id="username"
           name="username"
@@ -17,11 +23,14 @@
           placeholder="uwe oder alexandre"
           autofocus
         />
-      </div>
+      </mat-form-field>
 
-      <div class="form-group">
-        <label for="password">Passwort</label>
+      <!-- Password Field -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Passwort</mat-label>
+        <mat-icon matIconPrefix>lock</mat-icon>
         <input
+          matInput
           type="password"
           id="password"
           name="password"
@@ -29,19 +38,36 @@
           required
           placeholder="Passwort eingeben"
         />
-      </div>
+      </mat-form-field>
 
+      <!-- Error Message -->
       <div *ngIf="error" class="error-message">
-        {{ error }}
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ error }}</span>
       </div>
 
-      <button type="submit" [disabled]="loading || !loginForm.valid" class="login-button">
-        {{ loading ? 'Anmelden...' : 'Anmelden' }}
+      <!-- Submit Button -->
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="loading || !loginForm.valid"
+        class="login-button">
+        <mat-spinner *ngIf="loading" diameter="20" class="button-spinner"></mat-spinner>
+        <span *ngIf="!loading">Anmelden</span>
+        <span *ngIf="loading">Anmelden...</span>
       </button>
     </form>
 
     <div class="login-footer">
-      <p class="hint">Standard-Passwort: password123</p>
+      <p class="hint">💡 Standard-Passwort: password123</p>
     </div>
+  </div>
+
+  <!-- Floating Shapes Background -->
+  <div class="bg-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
   </div>
 </div>

@@ -1,88 +1,98 @@
-// Kita Casa Azul Custom Material Theme
-// Primary color: #667eea (purple/indigo from brand)
+// Kita Casa Azul Custom Material Theme - Modernized 2026
+// Primary color: #f59638 (warm orange) - replaces purple
+// Accent color: #00bfce (modern teal)
 
 @use '@angular/material' as mat;
 
 // Include the common styles for Angular Material
 @include mat.core();
 
-// Define custom purple palette based on brand color #667eea
-$kita-purple: (
-  50: #eeeffd,
-  100: #d4d8f9,
-  200: #b8bef5,
-  300: #9ca4f1,
-  400: #8691ee,
-  500: #667eea,  // Primary brand color
-  600: #5e76e8,
-  700: #536be5,
-  800: #4961e2,
-  900: #384edd,
-  contrast: (
-    50: rgba(black, 0.87),
-    100: rgba(black, 0.87),
-    200: rgba(black, 0.87),
-    300: rgba(black, 0.87),
-    400: rgba(black, 0.87),
-    500: white,
-    600: white,
-    700: white,
-    800: white,
-    900: white,
-  )
-);
+// ============================================
+// COLOR PALETTES - Using Material's Built-in Palettes
+// ============================================
 
-// Define custom accent palette (complementary teal/cyan)
-$kita-accent: (
-  50: #e0f7fa,
-  100: #b2ebf2,
-  200: #80deea,
-  300: #4dd0e1,
-  400: #26c6da,
-  500: #00bcd4,
-  600: #00acc1,
-  700: #0097a7,
-  800: #00838f,
-  900: #006064,
-  contrast: (
-    50: rgba(black, 0.87),
-    100: rgba(black, 0.87),
-    200: rgba(black, 0.87),
-    300: rgba(black, 0.87),
-    400: rgba(black, 0.87),
-    500: white,
-    600: white,
-    700: white,
-    800: white,
-    900: white,
-  )
-);
+// Use Material's built-in deep-orange for primary (closest to our orange)
+$kita-primary: mat.m2-define-palette(mat.$m2-deep-orange-palette, 500);
 
-// Define the theme
+// Use Material's built-in cyan for accent (closest to our teal)
+$kita-accent: mat.m2-define-palette(mat.$m2-cyan-palette, 600);
+
+// Use Material's red for warnings
+$kita-warn: mat.m2-define-palette(mat.$m2-red-palette, 600);
+
+// ============================================
+// LIGHT THEME
+// ============================================
+
+$kita-light-theme: mat.m2-define-light-theme((
+  color: (
+    primary: $kita-primary,
+    accent: $kita-accent,
+    warn: $kita-warn,
+  ),
+  typography: mat.m2-define-typography-config(),
+  density: 0,
+));
+
+// ============================================
+// DARK THEME
+// ============================================
+
+$kita-dark-theme: mat.m2-define-dark-theme((
+  color: (
+    primary: $kita-primary,
+    accent: $kita-accent,
+    warn: $kita-warn,
+  ),
+  typography: mat.m2-define-typography-config(),
+  density: 0,
+));
+
+// ============================================
+// APPLY THEMES
+// ============================================
+
+// Default light theme
 html {
   height: 100%;
+  @include mat.all-component-themes($kita-light-theme);
+}
 
-  @include mat.theme((
-    color: (
-      primary: $kita-purple,
-      tertiary: $kita-accent,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
+// Dark theme when .dark-theme class is applied
+html.dark-theme {
+  @include mat.all-component-colors($kita-dark-theme);
+
+  body {
+    color-scheme: dark;
+  }
 }
 
 body {
   color-scheme: light;
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
+  background-color: #ffffff;
+  color: rgba(0, 0, 0, 0.87);
   margin: 0;
   height: 100%;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
-// Custom global styles
+// Override with our custom colors using CSS variables
+:root {
+  --mat-toolbar-container-background-color: #f59638;
+  --mat-toolbar-container-text-color: white;
+}
+
+html.dark-theme {
+  body {
+    background-color: #1a1a1a;
+    color: rgba(255, 255, 255, 0.87);
+  }
+}
+
+// ============================================
+// GLOBAL CUSTOM STYLES
+// ============================================
+
 * {
   box-sizing: border-box;
 }
@@ -96,19 +106,54 @@ body {
   }
 }
 
-// Custom spacing utilities
+// ============================================
+// SPACING UTILITIES (8px grid system)
+// ============================================
+
 .mt-1 { margin-top: 8px !important; }
 .mt-2 { margin-top: 16px !important; }
 .mt-3 { margin-top: 24px !important; }
+.mt-4 { margin-top: 32px !important; }
 .mb-1 { margin-bottom: 8px !important; }
 .mb-2 { margin-bottom: 16px !important; }
 .mb-3 { margin-bottom: 24px !important; }
+.mb-4 { margin-bottom: 32px !important; }
 .ml-1 { margin-left: 8px !important; }
 .ml-2 { margin-left: 16px !important; }
+.ml-3 { margin-left: 24px !important; }
 .mr-1 { margin-right: 8px !important; }
 .mr-2 { margin-right: 16px !important; }
+.mr-3 { margin-right: 24px !important; }
 
-// Loading overlay styles
+.p-1 { padding: 8px !important; }
+.p-2 { padding: 16px !important; }
+.p-3 { padding: 24px !important; }
+.p-4 { padding: 32px !important; }
+
+// ============================================
+// ELEVATION SYSTEM
+// ============================================
+
+.elevation-1 {
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.elevation-2 {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06), 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.elevation-3 {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.06), 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.elevation-4 {
+  box-shadow: 0 8px 16px rgba(0,0,0,0.06), 0 12px 24px rgba(0,0,0,0.1);
+}
+
+// ============================================
+// LOADING OVERLAY
+// ============================================
+
 .loading-overlay {
   position: fixed;
   top: 0;
@@ -122,15 +167,22 @@ body {
   z-index: 9999;
 }
 
-// Focus indicators for accessibility
+// ============================================
+// FOCUS INDICATORS (Accessibility)
+// ============================================
+
 *:focus-visible {
-  outline: 2px solid #667eea;
+  outline: 2px solid var(--color-primary, #f59638);
   outline-offset: 2px;
+  border-radius: 4px;
 }
 
-// Snackbar custom styles
+// ============================================
+// SNACKBAR STYLES
+// ============================================
+
 .success-snackbar {
-  background-color: #4caf50 !important;
+  background-color: #10b981 !important;
   color: white !important;
 
   .mat-mdc-button {
@@ -139,7 +191,7 @@ body {
 }
 
 .error-snackbar {
-  background-color: #f44336 !important;
+  background-color: #ef4444 !important;
   color: white !important;
 
   .mat-mdc-button {
@@ -148,7 +200,7 @@ body {
 }
 
 .warning-snackbar {
-  background-color: #ff9800 !important;
+  background-color: #f59e0b !important;
   color: white !important;
 
   .mat-mdc-button {
@@ -157,7 +209,7 @@ body {
 }
 
 .info-snackbar {
-  background-color: #2196f3 !important;
+  background-color: #3b82f6 !important;
   color: white !important;
 
   .mat-mdc-button {

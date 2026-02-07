@@ -1,271 +1,443 @@
-.schedule-table-container {
+/* ============================================ */
+/* SCHEDULE CARDS - MODERN CARD-BASED LAYOUT */
+/* ============================================ */
+
+.schedule-cards-container {
   width: 100%;
-  overflow-x: auto;
-  margin-top: 16px;
+  padding: 16px 0;
 }
 
-.schedule-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* ============================================ */
+/* STAFF SCHEDULE CARD */
+/* ============================================ */
+
+.staff-schedule-card {
+  background: var(--surface-card);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  border: 1px solid var(--border-color-light);
 }
 
-/* Header Styling */
-.schedule-table th {
-  background-color: #3f51b5;
-  color: white;
-  font-weight: 600;
-  padding: 16px 12px;
-  border-bottom: 2px solid #303f9f;
-  text-align: left;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+.staff-schedule-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
+
+/* ============================================ */
+/* STAFF HEADER WITH AVATAR */
+/* ============================================ */
 
 .staff-header {
-  min-width: 180px;
-  max-width: 250px;
-}
-
-/* Cell Styling */
-.schedule-table td {
-  padding: 0;
-  border-bottom: 1px solid #e0e0e0;
-  border-right: 1px solid #f0f0f0;
-  vertical-align: top;
-  min-height: 70px;
-  position: relative;
-}
-
-.staff-cell {
-  padding: 12px;
-  background-color: #fafafa;
-  font-weight: 500;
-}
-
-.staff-info {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--border-color-light);
 }
 
-.staff-last-name {
-  font-weight: bold;
-  color: #212121;
-  font-size: 0.95em;
-  line-height: 1.3;
-}
-
-.staff-first-name {
-  font-weight: 400;
-  color: #212121;
-  font-size: 0.90em;
-  line-height: 1.3;
-}
-
-.staff-role {
-  font-size: 0.75em;
-  color: #666;
-  font-weight: 400;
-  margin-top: 2px;
-}
-
-/* Schedule Cell */
-.schedule-cell {
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-height: 70px;
-  padding: 8px;
-}
-
-.schedule-cell:hover {
-  opacity: 0.9;
-  box-shadow: inset 0 0 0 2px rgba(63, 81, 181, 0.3);
-}
-
-.cell-content {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-height: 54px;
-  position: relative;
-}
-
-.cell-text {
-  font-size: 0.9em;
-  line-height: 1.4;
-  color: #212121;
-  font-weight: 500;
-  padding-right: 32px;
-}
-
-.cell-actions {
-  position: absolute;
-  top: 0;
-  right: 0;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.schedule-cell:hover .cell-actions {
-  opacity: 1;
-}
-
-.delete-btn {
-  width: 28px;
-  height: 28px;
-  line-height: 28px;
-}
-
-.delete-btn mat-icon {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
-  line-height: 18px;
-}
-
-.empty-cell {
+.staff-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 54px;
+  font-size: 20px;
+  font-weight: 600;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(245, 150, 56, 0.25);
+}
+
+.staff-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.staff-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 4px 0;
+}
+
+.staff-role {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ============================================ */
+/* WEEK SCHEDULE PILLS */
+/* ============================================ */
+
+.week-schedule {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.day-pill-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.day-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+/* ============================================ */
+/* DAY PILL - CORE STYLES */
+/* ============================================ */
+
+.day-pill {
+  min-height: 90px;
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  border: 2px solid;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  background: transparent;
+  font-family: inherit;
+  text-align: left;
+}
+
+.day-pill:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+.day-pill:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================ */
+/* PILL CONTENT (FILLED STATE) */
+/* ============================================ */
+
+.pill-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  position: relative;
+}
+
+.status-icon {
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.pill-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.pill-time {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.pill-hours {
+  font-size: 11px;
+  font-weight: 500;
+  margin-top: 4px;
+  opacity: 0.8;
+}
+
+.pill-delete-btn {
+  position: absolute !important;
+  top: -8px;
+  right: -8px;
+  width: 24px !important;
+  height: 24px !important;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--transition-fast);
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
 }
 
-.schedule-cell:hover .empty-cell {
-  opacity: 0.3;
+.day-pill:hover .pill-delete-btn {
+  opacity: 1;
 }
 
-.add-icon {
-  color: #9e9e9e;
-  font-size: 24px;
-  width: 24px;
-  height: 24px;
+.pill-delete-btn mat-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  color: white;
 }
 
-/* Status Color Coding */
-.cell-normal {
-  background-color: #e8f5e9;
+/* ============================================ */
+/* EMPTY PILL STATE */
+/* ============================================ */
+
+.pill-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
 }
 
-.cell-frei {
-  background-color: #e3f2fd;
+.day-pill:hover .pill-empty {
+  opacity: 1;
 }
 
-.cell-krank {
-  background-color: #ffebee;
+.pulse-icon {
+  font-size: 24px !important;
+  width: 24px !important;
+  height: 24px !important;
+  animation: pulse 2s infinite;
 }
 
-.cell-urlaub {
-  background-color: #fff3e0;
+.pill-empty span {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.cell-fortbildung {
-  background-color: #f3e5f5;
+/* ============================================ */
+/* STATUS-BASED PILL COLORS (VIBRANT) */
+/* ============================================ */
+
+/* NORMAL - Working Day */
+.pill-normal {
+  background: var(--status-normal-bg);
+  color: var(--status-normal-text);
+  border-color: var(--status-normal-border);
 }
 
-/* Row Hover Effect */
-.schedule-table tr.mat-mdc-row:hover {
-  background-color: rgba(0, 0, 0, 0.02);
+.pill-normal .status-icon {
+  color: var(--status-normal-border);
 }
 
-/* Empty State */
+/* FREI - Free Day */
+.pill-frei {
+  background: var(--status-frei-bg);
+  color: var(--status-frei-text);
+  border-color: var(--status-frei-border);
+}
+
+.pill-frei .status-icon {
+  color: var(--status-frei-border);
+}
+
+/* KRANK - Sick Day */
+.pill-krank {
+  background: var(--status-krank-bg);
+  color: var(--status-krank-text);
+  border-color: var(--status-krank-border);
+}
+
+.pill-krank .status-icon {
+  color: var(--status-krank-border);
+}
+
+/* URLAUB - Vacation */
+.pill-urlaub {
+  background: var(--status-urlaub-bg);
+  color: var(--status-urlaub-text);
+  border-color: var(--status-urlaub-border);
+}
+
+.pill-urlaub .status-icon {
+  color: var(--status-urlaub-border);
+}
+
+/* FORTBILDUNG - Training */
+.pill-fortbildung {
+  background: var(--status-fortbildung-bg);
+  color: var(--status-fortbildung-text);
+  border-color: var(--status-fortbildung-border);
+}
+
+.pill-fortbildung .status-icon {
+  color: var(--status-fortbildung-border);
+}
+
+/* EMPTY - No entry */
+.pill-empty-state {
+  background: var(--surface-elevated);
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+  border-style: dashed;
+}
+
+.pill-empty-state:hover {
+  background: var(--surface-card);
+  border-color: var(--color-primary);
+}
+
+.pill-empty-state .pill-empty {
+  color: var(--text-secondary);
+}
+
+/* ============================================ */
+/* EMPTY STATE */
+/* ============================================ */
+
 .empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 48px 24px;
-  color: #757575;
-  background-color: white;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 64px 24px;
+  color: var(--text-secondary);
+  background: var(--surface-card);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .empty-state mat-icon {
-  font-size: 64px;
-  width: 64px;
-  height: 64px;
+  font-size: 80px;
+  width: 80px;
+  height: 80px;
   margin-bottom: 16px;
-  color: #bdbdbd;
+  color: var(--text-disabled);
 }
 
 .empty-state p {
   margin: 0;
-  font-size: 1.1em;
+  font-size: 16px;
+  font-weight: 500;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .schedule-table-container {
-    margin: 0 -16px;
+/* ============================================ */
+/* RESPONSIVE DESIGN */
+/* ============================================ */
+
+/* Tablet */
+@media (max-width: 959px) {
+  .week-schedule {
+    grid-template-columns: repeat(3, 1fr);
   }
 
-  .schedule-table th,
-  .schedule-table td {
-    padding: 8px 6px;
-    font-size: 0.85em;
+  .staff-schedule-card {
+    padding: 20px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 599px) {
+  .week-schedule {
+    grid-template-columns: 1fr;
   }
 
-  .staff-header {
-    min-width: 120px;
+  .staff-schedule-card {
+    padding: 16px;
+    margin-bottom: 16px;
   }
 
-  .cell-text {
-    font-size: 0.8em;
+  .staff-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
   }
 
-  .staff-last-name {
-    font-size: 0.85em;
-  }
-
-  .staff-first-name {
-    font-size: 0.80em;
+  .staff-name {
+    font-size: 16px;
   }
 
   .staff-role {
-    font-size: 0.70em;
+    font-size: 13px;
   }
 
-  .cell-actions {
+  .day-pill {
+    min-height: 80px;
+  }
+
+  .day-label {
+    font-size: 12px;
+  }
+
+  /* Show delete button on mobile without hover */
+  .pill-delete-btn {
     opacity: 1;
+    background: rgba(0, 0, 0, 0.3);
   }
 }
 
-/* Print Styling */
+/* ============================================ */
+/* PRINT STYLES */
+/* ============================================ */
+
 @media print {
-  .schedule-table-container {
-    overflow: visible;
+  .schedule-cards-container {
+    padding: 0;
   }
 
-  .schedule-table {
+  .staff-schedule-card {
+    page-break-inside: avoid;
     box-shadow: none;
+    border: 1px solid #ddd;
+    margin-bottom: 16px;
   }
 
-  .cell-actions {
+  .pill-delete-btn {
     display: none !important;
   }
 
-  .schedule-cell {
+  .pill-empty {
+    display: none !important;
+  }
+
+  .day-pill {
     cursor: default;
   }
 
-  .schedule-table th {
-    background-color: #3f51b5 !important;
+  /* Ensure colors print correctly */
+  .pill-normal,
+  .pill-frei,
+  .pill-krank,
+  .pill-urlaub,
+  .pill-fortbildung {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
-  .cell-normal,
-  .cell-frei,
-  .cell-krank,
-  .cell-urlaub,
-  .cell-fortbildung {
+  .staff-avatar {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+  }
+}
+
+/* ============================================ */
+/* ANIMATIONS */
+/* ============================================ */
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.95);
   }
 }

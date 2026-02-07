@@ -1,5 +1,128 @@
-/* Global Application Styles */
+/* Global Application Styles - Modernized 2026 */
 /* Material theme is loaded from theme.scss */
+
+/* ============================================ */
+/* CSS CUSTOM PROPERTIES (Light Theme) */
+/* ============================================ */
+
+:root {
+  /* Primary Colors */
+  --color-primary: #f59638;
+  --color-primary-light: #f9b773;
+  --color-primary-dark: #ef7924;
+
+  /* Accent Colors */
+  --color-accent: #00bfce;
+  --color-accent-light: #4dd2dd;
+  --color-accent-dark: #00a9bc;
+
+  /* Semantic Colors */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+
+  /* Surface Colors */
+  --surface-background: #ffffff;
+  --surface-card: #ffffff;
+  --surface-elevated: #f9fafb;
+
+  /* Text Colors */
+  --text-primary: rgba(0, 0, 0, 0.87);
+  --text-secondary: rgba(0, 0, 0, 0.6);
+  --text-disabled: rgba(0, 0, 0, 0.38);
+  --text-on-primary: #ffffff;
+
+  /* Border Colors */
+  --border-color: rgba(0, 0, 0, 0.12);
+  --border-color-light: rgba(0, 0, 0, 0.06);
+
+  /* Status Colors - Vibrant (not pastel) */
+  --status-normal-bg: #d1fae5;
+  --status-normal-text: #065f46;
+  --status-normal-border: #10b981;
+
+  --status-frei-bg: #dbeafe;
+  --status-frei-text: #1e40af;
+  --status-frei-border: #3b82f6;
+
+  --status-krank-bg: #fecaca;
+  --status-krank-text: #991b1b;
+  --status-krank-border: #ef4444;
+
+  --status-urlaub-bg: #fde68a;
+  --status-urlaub-text: #92400e;
+  --status-urlaub-border: #f59e0b;
+
+  --status-fortbildung-bg: #e9d5ff;
+  --status-fortbildung-text: #6b21a8;
+  --status-fortbildung-border: #a855f7;
+
+  /* Spacing (8px grid) */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================ */
+/* DARK THEME OVERRIDES */
+/* ============================================ */
+
+html.dark-theme {
+  /* Surface Colors */
+  --surface-background: #1a1a1a;
+  --surface-card: #242424;
+  --surface-elevated: #2e2e2e;
+
+  /* Text Colors */
+  --text-primary: rgba(255, 255, 255, 0.87);
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --text-disabled: rgba(255, 255, 255, 0.38);
+
+  /* Border Colors */
+  --border-color: rgba(255, 255, 255, 0.12);
+  --border-color-light: rgba(255, 255, 255, 0.06);
+
+  /* Status Colors - Dark Adjusted */
+  --status-normal-bg: #064e3b;
+  --status-normal-text: #6ee7b7;
+  --status-normal-border: #10b981;
+
+  --status-frei-bg: #1e3a8a;
+  --status-frei-text: #93c5fd;
+  --status-frei-border: #3b82f6;
+
+  --status-krank-bg: #7f1d1d;
+  --status-krank-text: #fca5a5;
+  --status-krank-border: #ef4444;
+
+  --status-urlaub-bg: #78350f;
+  --status-urlaub-text: #fcd34d;
+  --status-urlaub-border: #f59e0b;
+
+  --status-fortbildung-bg: #581c87;
+  --status-fortbildung-text: #d8b4fe;
+  --status-fortbildung-border: #a855f7;
+}
+
+/* ============================================ */
+/* GLOBAL RESETS */
+/* ============================================ */
 
 html, body {
   height: 100%;
@@ -10,9 +133,15 @@ body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--surface-background);
+  color: var(--text-primary);
+  transition: background-color var(--transition-slow), color var(--transition-slow);
 }
 
-/* Utility classes */
+/* ============================================ */
+/* UTILITY CLASSES */
+/* ============================================ */
+
 .full-width {
   width: 100%;
 }
@@ -25,7 +154,10 @@ body {
   flex: 1 1 auto;
 }
 
-/* Loading spinner */
+/* ============================================ */
+/* LOADING SPINNER */
+/* ============================================ */
+
 .loading-spinner {
   display: flex;
   justify-content: center;
@@ -33,9 +165,120 @@ body {
   min-height: 200px;
 }
 
-/* Error message */
+/* ============================================ */
+/* ERROR MESSAGE */
+/* ============================================ */
+
 .error-message {
-  color: #f44336;
+  color: var(--color-error);
   font-size: 14px;
   margin-top: 4px;
+}
+
+/* ============================================ */
+/* ANIMATIONS */
+/* ============================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ============================================ */
+/* SKELETON LOADERS */
+/* ============================================ */
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-md);
+}
+
+html.dark-theme .skeleton {
+  background: linear-gradient(90deg, #2a2a2a 25%, #333 50%, #2a2a2a 75%);
+  background-size: 200% 100%;
+}
+
+.skeleton-text {
+  height: 16px;
+  margin-bottom: 8px;
+}
+
+.skeleton-text.large {
+  height: 24px;
+}
+
+.skeleton-circle {
+  border-radius: 50%;
+}
+
+/* ============================================ */
+/* SMOOTH SCROLLING */
+/* ============================================ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ============================================ */
+/* CARD HOVER EFFECTS */
+/* ============================================ */
+
+.hover-lift {
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.06), 0 6px 12px rgba(0,0,0,0.1);
+}
+
+/* ============================================ */
+/* BUTTON ANIMATIONS */
+/* ============================================ */
+
+button, .mat-mdc-button, .mat-mdc-raised-button {
+  transition: transform var(--transition-fast);
+}
+
+button:hover, .mat-mdc-button:hover, .mat-mdc-raised-button:hover {
+  transform: scale(1.02);
+}
+
+button:active, .mat-mdc-button:active, .mat-mdc-raised-button:active {
+  transform: scale(0.98);
 }
